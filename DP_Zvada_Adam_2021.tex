@@ -1,0 +1,167 @@
+% arara: xelatex
+% arara: xelatex
+% arara: xelatex
+
+% options:
+% thesis=B bachelor's thesis
+% thesis=M master's thesis
+% czech thesis in Czech language
+% english thesis in English language
+% hidelinks remove colour boxes around hyperlinks
+
+\documentclass[thesis=M,english]{prefs/FITthesis}[2019/03/06]
+
+% \usepackage{subfig} %subfigures
+% \usepackage{amsmath} %advanced maths
+% \usepackage{amssymb} %additional math symbols
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{graphicx} %graphics files inclusion
+% \usepackage{amsmath} %advanced maths
+% \usepackage{amssymb} %additional math symbols
+
+\usepackage{dirtree} %directory tree visualisation
+\usepackage{subfig} %image side by side
+\usepackage{todonotes} %todo
+\usepackage{url}
+\usepackage{textcomp} %degree symbol
+\usepackage{color, colortbl} %color, table color
+\usepackage{enumitem} %lists
+\usepackage{float} %for H option in figures
+\usepackage{array} %table aligment       
+\usepackage{amsmath} %cases
+\usepackage{amssymb}
+\usepackage{svg} %svg
+\usepackage{scrextend}
+\usepackage{multirow}
+\addtokomafont{labelinglabel}{\sffamily}
+
+\definecolor{LightCyan}{rgb}{0.88,1,1}
+\definecolor{Blue}{rgb}{0.30980, 0.50588, 0.73725}
+\definecolor{White}{rgb}{1, 1, 1}
+
+% list of acronyms
+\usepackage[acronym,nonumberlist,toc,nopostdot,numberedsection=autolabel,nomain]{glossaries}
+\makeglossaries
+\newcommand{\tg}{\mathop{\mathrm{tg}}} %cesky tangens
+\newcommand{\cotg}{\mathop{\mathrm{cotg}}} %cesky cotangens
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+\department{Department of Applied Mathematics}
+\title{Vehicle Routing Problem with Time Windows solved via Machine Learning and Optimization Heuristics}
+\authorGN{Adam} %author's given name/names
+\authorFN{Zvada} %author's surname
+\authorWithDegrees{Bc. Adam Zvada} %author's name with academic degrees
+\author{Adam Zvada} %author's name without academic degrees
+\supervisor{doc. Ing. Pavel Kordík, Ph.D.}
+\acknowledgements{TODO}
+\abstractCS{TODO}
+\abstractEN{TODO}
+\placeForDeclarationOfAuthenticity{Prague} %where you have signed the declaration
+\keywordsCS{TODO\newpage}
+\keywordsEN{TODO}
+\declarationOfAuthenticityOption{5} %select as appropriate, according to the desired license
+
+\newacronym{ai}{AI}{artificial intelligence}
+\newacronym{vrp}{VRP}{vehicle routing problem}
+\newacronym{cvrp}{CVRP}{capacitated vehicle routing problem}
+\newacronym{vrptw}{VRPTW}{vehicle routing problem with time windows}
+\newacronym{tsp}{TSP}{traveling salesman problem}
+
+\newacronym{pdp}{CNN}{convolutional neural network}
+\newacronym{ctu}{CTU}{Czech Technical University}
+\newacronym{cpu}{CPU}{central processing unit}
+\newacronym{cv}{CV}{computer vision}
+\newacronym{dex}{DEX}{Deep EXpectation}
+\newacronym{dl}{DL}{deep learning}
+\newacronym{dlt}{DLT}{Direct Linear Transform}
+\newacronym{dsae}{DSAE}{deep sparse autoencoders}
+\newacronym{fast r-cnn}{Fast R-CNN}{fast region-based convolutional network}
+\newacronym{faster r-cnn}{Faster R-CNN}{faster region-based convolutional network}
+\newacronym{fce}{FCE}{Faculty of Civil Engineering}
+\newacronym{fit}{FIT}{Faculty of Information Technology}
+\newacronym{fn}{FN}{false negatives}
+\newacronym{fp}{FP}{false positives}
+\newacronym{fps}{FPS}{frames per second}
+\newacronym{gige}{GigE}{Gigabit Ethernet}
+\newacronym{gpu}{GPU}{graphics processing unit}
+\newacronym{hog}{HOG}{histogram of oriented gradients}
+\newacronym{hsv}{HSV}{hue-saturation-value}
+\newacronym{idsw}{IDSW}{identity switches}
+\newacronym{improlab}{ImproLab}{Image Processing Laboratory}
+\newacronym{iou}{IoU}{intersection over union}
+\newacronym{lbp}{LBP}{local binary pattern}
+\newacronym{lstm}{LSTM}{long short-term memory}
+\newacronym{mae}{MAE}{mean absolute error}
+\newacronym{ml}{ML}{machine learning}
+\newacronym{mlp}{MLP}{multi layer perceptron}
+\newacronym{mot}{MOT}{multiple object tracking}
+\newacronym{mota}{MOTA}{multiple object tracking accuracy}
+\newacronym{motp}{MOTP}{multiple object tracking precision}
+\newacronym{mots}{MOTS}{multiple object tracking and segmentation}
+\newacronym{mp}{MP}{megapixel}
+\newacronym{mtmct}{MTMCT}{multi-target multi-camera tracking}
+\newacronym{nms}{NMS}{non-maximum suppression}
+\newacronym{nn}{NN}{neural network}
+\newacronym{pca}{PCA}{principal component analysis}
+\newacronym{r-cnn}{R-CNN}{region-based convolutional network}
+\newacronym{reid}{ReID}{re-identification}
+\newacronym{rgb}{RGB}{red-green-blue}
+\newacronym{roi}{RoI}{region of interest}
+\newacronym{rmse}{RMSE}{root-mean-square error}
+\newacronym{rnn}{RNN}{recurrent neural network}
+\newacronym{rpn}{RPN}{region proposal network}
+\newacronym{sdk}{SDK}{software development kit}
+\newacronym{sift}{SIFT}{Scale-invariant feature transform}
+\newacronym{sort}{SORT}{simple online and real-time tracking}
+\newacronym{ssd}{SSD}{single-shot detector}
+\newacronym{ssr}{SSR-Net}{Soft Stagewise Regression Network}
+\newacronym{surf}{SURF}{Speeded-Up Robust Features}
+\newacronym{spp}{SPP}{spatial pyramid pooling}
+\newacronym{svm}{SVM}{support vector machine}
+\newacronym{yolo}{YOLO}{you only look once}
+
+
+\begin{document}
+    \input{src_text/00_introduction.tex}
+    \input{src_text/01_theoretical_background.tex}
+    \input{src_text/02_related_work.tex}
+    \input{src_text/03_methodology.tex}
+    \input{src_text/04_implementation.tex}
+    \input{src_text/05_evaluation.tex}
+    \input{src_text/06_conclusion.tex}
+    
+    % bibliography
+    \bibliographystyle{prefs/iso690}
+    \bibliography{ref}
+    
+    \appendix
+    
+    % acronyms
+    \printglossaries
+    
+    % media contents
+    \chapter{Media contents}\label{app:CDcontent}
+    \begin{figure}
+    	\dirtree{%
+    		.1 readme.txt\DTcomment{the file with CD contents description}.
+    		.1 data\DTcomment{the data files directory}.
+    		.2 example\textunderscore sequence\DTcomment{the directory with example sequence from dataset}.
+    		.3 *.jpg\DTcomment{the example images}.
+    		.2 example\textunderscore sequence\textunderscore graphs\DTcomment{the directory of graphs of experiments}.
+    		.3 *.png\DTcomment{the motion output graphs}.
+    		.2 tracking\textunderscore example.mp4\DTcomment{the example video file}.
+    		.1 src\DTcomment{the directory of source codes}.
+    		.2 models\DTcomment{the directory of deep learning modules}.
+    		.2 utils\DTcomment{the directory of helper modules}.
+    		.2 *.py\DTcomment{the Python source files}.
+    		.1 text\DTcomment{the thesis text directory}.
+    		.2 thesis\DTcomment{the directory of \LaTeX{} source codes of the thesis}.
+    		.2 thesis.pdf\DTcomment{the Diploma thesis in PDF format}.
+    	}
+    \end{figure}
+    
+
+\end{document}
