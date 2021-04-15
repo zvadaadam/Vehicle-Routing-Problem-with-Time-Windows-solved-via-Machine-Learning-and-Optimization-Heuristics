@@ -1,13 +1,13 @@
 \chapter{Introduction}
-    The \gls{vrp} is one of the most extensively studied combinatorial problems. It is easy to define but hard to solve. The reason (\gls{vrp}) is attracting many researchers is the fact that finding a near-optimal solution in a reasonable time would have a great impact on many industries, especially in the domain of transportation and logistics. 
+    The \gls{vrp} is one of the most extensively studied combinatorial problems. It is easy to define but very difficult to solve\cite{time-complexity-vrp}. The reason (\gls{vrp}) is attracting many researchers is the fact that finding a near-optimal solution in a reasonable time would have a great impact on many industries, especially in the domain of transportation and logistics. 
     
-    The paradigm shift in logistics business models towards instant gratification of customers are pushing the planning systems to be flexible and dynamic. The environment is constantly changing and planning systems have to update its solutions in a short amount of time but maintain the best delivery efficiency.
+    The paradigm shift in logistics business models towards instant gratification of customers are pushing the planning systems to be flexible and dynamic. The environment is constantly changing and planning systems have to update or entirely replan the instance in a short amount of time but maintain the best delivery efficiency.
     
     The problem objective of \gls{vrp} is simply finding the shortest route for multiple vehicles to serve all the given set of customers. The shortest route can be differently interpreted based on your minimalization criteria, e.g, traveled distance, time, or a combination of both. It was first proposed by Dantzig and Ramser \cite{truck-dispatching-problem} in 1959, and since then researchers are coming up with different approaches how to solve the problem. 
 
     In the real world, the general VRP problem is not enough to solve the business-related problems. \gls{vrp} has multiple variants adding various constraints such as capacity, demand or time windows for given set of customers. The \gls{vrptw} is main focus of this thesis and we will be looking at some novel approaches how to solve it with \gls{ai}.
     
-    Solving any kind of variation of \gls{vrp} via \gls{ai} results in instant geneated solution. Solving any kind of variation of \gls{vrp} via \gls{ai} results in instant geneated solution. Solving any kind of variation of \gls{vrp} via \gls{ai} results in instant geneated solution. Solving any kind of variation of \gls{vrp} via \gls{ai} results in instant geneated solution.
+    We expect that leveraging \gls{ai} or \gls{ml} techniques to solve \gls{vrp} would lead in a drastic reduction of computational time for solving given instance of \gls{vrp}. Moreover, the time complexity would not be exponentially increasing with the problem size. The trade-off lays in the required time to allow \gls{ai} to train and learn how to solve the problem of vehicle routing.
     
     \begin{figure}[ht]
         \centering
@@ -27,6 +27,9 @@
         \label{fig:vrp-graph}
     \end{figure}
     
+    \gls{vrp}s are classified as NP-Hard problems which was proved by Lenstra and Kan \cite{time-complexity-vrp}. It means that in the worst case, adding new nodes, i.e., customers results in an exponential increase of computational complexity.
+    
+    \subsection{VRP Notation}
     Let's introduce our used notation and its real-world interpretation.
     \begin{itemize}
         \item $G=(V,E)$ is a complete undirected graph
@@ -37,7 +40,7 @@
         \begin{itemize}
             \item A depot
         \end{itemize}
-        \item $V_1 = (v_1, \cdots, v_n)$ nodes expect the initial node
+        \item $V^{\prime} = (v_1, \cdots, v_n)$ nodes expect the initial node
         \begin{itemize}
             \item Geographically scattered location of customers
         \end{itemize}
@@ -45,9 +48,13 @@
         \begin{itemize}
             \item A single route between two locations with associated cost, e.g., distance.
         \end{itemize}
-        \item $R_i \subset V$ is a path but starts and ends at $v_0$
+        \item $C$ is a matrix of edge weights indexed by nodes. $c_i_j$ where $i,j \in V$
         \begin{itemize}
-            \item Route visit a subset of customers starting and ending at a depot, it can be referred to it as a delivery plan.
+            \item Matrix of costs between customers
+        \end{itemize}
+        \item $R_i \subset V$ is a path that starts and ends at $v_0$. $(r_0 = v_0 \land r_{|R_i|} = v_0)$
+        \begin{itemize}
+            \item Route visit a subset of customers starting and ending at the depot, it can be referred to it as a delivery plan.
         \end{itemize}
         \item $k$ number of paths
         \begin{itemize}
@@ -63,20 +70,22 @@
         \end{itemize}
     \end{itemize}
     
-    Solution for \gls{vrp} of routes $R_k$ is feasible only if each node $V_1$ is visited once.
+    \textbf{Fesability of \gls{vrp} solution} for \gls{vrp} of routes $R$ is feasible only if each node $V_1$ is visited exactly once.
     
     The cost of route $R_i$ which we aim to minimize is the sum of its weights (costs). If we operate in Euclidean space, then it is L2 norm of route locations.
     \begin{equation}
-        C(R_i) := \sum_{i \in R} d_i \leq Q TODO
+        C(R_i) := \sum_{k = 0}^{|R_i|} c_{r_k}_{r_k+1}
     \end{equation}
     
     The cost of \gls{vrp} solution is a sum of route costs.
     \begin{equation}
-        C(R) := \sum_{i \in R} d_i \leq Q TODO
+        C(R) := \sum_{i = 1}^{|R|} C(R_i)
     \end{equation}
     
 \section{Vehicle Routing Flavors}
-Our modern world heavily relies on complex logistics networks to ship your goods from one side of the world to your doorstep. In order to synchronize This takes a multi-modal planning be planned and that is the reason why other flavours and varients of \gls{vrp} has been studied and implemented in real world usecases.
+Our modern world heavily relies on complex logistics networks. It requires to synchronize multimodal planning to ship your goods from one side of the world to your doorstep. In order to achieve this, multiple variants and flavours of \gls{vrp} had to be studied and implemented in the real world use cases. It goes from ordinary variants like measuring the capacity of cars to a more niche problem like eVRP where vehicles are required to make stops to recharge.
+
+All the flavours of \gls{VRP} can be mutually combined, which is usually the main area of research.
 
     \begin{figure}[ht]
         \centering
@@ -85,7 +94,7 @@ Our modern world heavily relies on complex logistics networks to ship your goods
         \label{fig:vrp-flavours}
     \end{figure}
 
-The sections bellow will be desctibing each flavours of shown in \ref{fig:vrp-flavours}
+The sections below are describing each flavour shown in \ref{fig:vrp-flavours}.
 
     \subsection{Capacited Vehicle Routing Problem}
     The \gls{cvrp} extends the regular \gls{cvrp} in introducing a capacity element for each customer. In the literature, it is sometimes referred to as a demand. The customer's demand is $d \in \mathbb{N}^+$ which may represent capacity in the form of weight, size but also in some abstract concepts such as a basket of apples. Additionally, each vehicle has a predefined capacity $Q > 0$.
@@ -95,35 +104,37 @@ The sections bellow will be desctibing each flavours of shown in \ref{fig:vrp-fl
         q(R) := \sum_{i \in R} d_i \leq Q
     \end{equation}
     
-    If the vehicle capacity of the fleet stays the same, we are dealing with \gls{cvrp} with homogenous fleet. A fleet with varying capacity for each vehicle is a heterogenous fleet.
+    If the vehicle capacity of the fleet stays the same, we are dealing with \gls{cvrp} with homogeneous fleet. A fleet with varying capacity for each vehicle is a heterogeneous fleet.
     
     \subsection{Vehicle Routing Problem with Time Windows}
-    The \gls{vrptw} extends the regular \gls{vrp} by time constraint for each customer. Customers have assigned time window interval $[e_i, l_i]$ where $e_li < l_i$, is the request when a vehicle is supposed to visit the node. The time window can be either implemented as a hard constraint
+    The \gls{vrptw} extends the regular \gls{vrp} by time constraint for each customer. Customers have assigned time window interval $[e_i, l_i]$ where $e_li < l_i$. The time interval is the request within a vehicle is supposed to visit the node. 
     
-    We consider time windows as a soft constraint, every time window can be violated barring a penalty cost. 
+    The time window can be either implemented as a hard constraint or a soft constraint. Hard constraint forces the vehicle to visit the node, i.e., the customer either in the given time interval or the solution is not feasible. Soft constrains are not strictly enforcing the vehicle to visit the customer, but they introduce a penalty for a violated interval barring a penalty cost. The penalty becomes a part of the cost function which \gls{vrp} aims to minimize.
     
-    In this thesis, we will be focusing on soft contrains for time windows because the lead to 
+    \begin{equation}
+        q(R) := \sum_{i \in R} d_i \leq Q TODO
+    \end{equation}
     
-    Fesability - soft constraint
+    In this thesis, we will be focusing on soft constraints for time windows since it is a better reflection of real world use cases. Most businesses allow couriers to arrive late or early, but these types of arrivals are supposed to be minimized.
     
     \subsection{Pick and Deliver}
+    The \gls{pdp} extends the regular \gls{vrp} by pairing pick and drop with precedence relationships, in which a pickup point must precede the paired delivery point. This flavour of \gls{vrp} is one of the most complex and even challenging for conventional methods like optimization heuristics algorithms.
+    
+    The feasibility of a \gls{pdp} solution is checking whether all delivery points have preceded pickup point.
+    
+    \subsection{Static vs. Dynamic}
     TODO
-    \subsection{Static Vehicle Routing Problem}
-    TODO
-    \subsection{Dynamic Vehicle Routing Problem}
-    TODO
-    \subsection{Deterministics Vehicle Routing Problem}
-    TODO
-    \subsection{Stochastic Vehicle Routing Problem}
+    \subsection{Deterministics vs. Stochastic}
     TODO
     
-\section{Real-world Applications}
- Since then, a large part of the OR community has been devoted
-to this problem which naturally arises in a large variety of practical applications. This
-trend has been reinforced by the explosion of consumer direct delivery in the beginning of
-the century. As an example of this explosion, UPS ground delivered around 11.5 million
-packages in 19931
-, against around 5.5 billion packages in 20192
-.
+    \subsection{Other Flavours}
+    Dial a Ride
+    Split Delivery VRP
+    Multi Depot VRP
+    
+\section{VRP in a Real-world}
+Consumer habits have been shifting towards online and the pandemic situation only accelerated this process. Delivery option is nowadays taken for granted and consumers are demanding a perfect delivery experience. In 2020, there has been shipped over 5.5 billion packages around the world \cite{num-shipped-packages}.
 
-Vehicle routing problems, among the most studied in combinatorial optimization, arise in many practical contexts (freight distribution and collection, transportation, garbage collection, newspaper delivery, etc.). Operations researchers have made significant developments in the algorithms for their solution, and Vehicle Routing: Problems, Methods, and Applications, Second Edition reflects these advances. The text of the new edition is either completely new or significantly revised and provides extensive and complete state-of-the-art coverage of vehicle routing by those who have done most of the innovative research in the area; it emphasizes methodology related to specific classes of vehicle routing problems and, since vehicle routing is used as a benchmark for all new solution techniques, contains a complete overview of current solutions to combinatorial optimization problems. It also includes several chapters on important and emerging applications, such as disaster relief and green vehicle routing. Audience: This book is intended for both researchers and graduate level students in operations research and applied mathematics. Practitioners will find this book particularly useful. Readers need a basic knowledge of the main methods for the solution of combinatorial optimization problems.
+Solving various flavors of \gls{VRP} efficiently in a reasonable time plays a crucial role for multiple businesses. For example, urban logistics is an essential part of the delivery process, not only it is the last part of the delivery chain, but frequently the courier interacts with the customer and delivery on time with proper ETA prediction is a must. It is also the most expansive part which makes up about 53\% of shipment’s total cost\cite{last-mile-cost}. Urban logistics by large benefits from a better and more optimized \gls{VRP} which increase the delivery efficiency and reduces the delivery cost. Delivery efficiency has been stated as the biggest challenge in last-mile deliveries by 25\% of surveyed companies in Logistics White Paper by ETA\cite{logistics-whitepaper}.
+
+At GoDeliver, we are building an autonomous last-mile delivery system and at the core is a planning system which is solving various \gls{vrp}. The flavour which we are solving is Dynamic Capacited Pick and Delivery Vehicle Routing Problem with Time Windows. The GoDeliver typical use case is food delivery with multi depots, the system has to be dynamic and flexible because a new customers are ordering stochasticaly. Another common usecase is grocerry delivery where we cloud have a one depot, time windows for customers and capacity for a vehicle.
