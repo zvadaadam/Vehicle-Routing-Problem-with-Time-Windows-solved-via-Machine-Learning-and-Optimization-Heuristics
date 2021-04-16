@@ -1,22 +1,8 @@
-\chapter{Introduction}
-    The \gls{vrp} is one of the most extensively studied combinatorial problems. It is easy to define but very difficult to solve\cite{time-complexity-vrp}. The reason (\gls{vrp}) is attracting many researchers is the fact that finding a near-optimal solution in a reasonable time would have a great impact on many industries, especially in the domain of transportation and logistics. 
-    
-    The paradigm shift in logistics business models towards instant gratification of customers are pushing the planning systems to be flexible and dynamic. The environment is constantly changing and planning systems have to update or entirely replan the instance in a short amount of time but maintain the best delivery efficiency.
-    
+\chapter{Introduction to Vehicle Routing Problem}\label{introduction_vrp}
+
     The problem objective of \gls{vrp} is simply finding the shortest route for multiple vehicles to serve all the given set of customers. The shortest route can be differently interpreted based on your minimalization criteria, e.g, traveled distance, time, or a combination of both. It was first proposed by Dantzig and Ramser \cite{truck-dispatching-problem} in 1959, and since then researchers are coming up with different approaches how to solve the problem. 
 
-    In the real world, the general VRP problem is not enough to solve the business-related problems. \gls{vrp} has multiple variants adding various constraints such as capacity, demand or time windows for given set of customers. The \gls{vrptw} is main focus of this thesis and we will be looking at some novel approaches how to solve it with \gls{ai}.
-    
-    We expect that leveraging \gls{ai} or \gls{ml} techniques to solve \gls{vrp} would lead in a drastic reduction of computational time for solving given instance of \gls{vrp}. Moreover, the time complexity would not be exponentially increasing with the problem size. The trade-off lays in the required time to allow \gls{ai} to train and learn how to solve the problem of vehicle routing.
-    
-    \begin{figure}[ht]
-        \centering
-        \includegraphics[width=0.75\textwidth]{resources/intro/godeliver-dashboard.png}
-        \caption{GoDeliver dashboard illustrating the vehicle routing problem with time windows}
-        \label{fig:godeliver_dashboard}
-    \end{figure}
-
-\section{Vehicle Routing Problem Definition}
+    \section{Vehicle Routing Problem Definition}
     
     The general \gls{vrp} can be defined as a problem in a complete graph $G=(V,E)$ of finding the optimal permutation $\pi_l = (\pi_0, \cdots, \pi_m)$ of nodes $V$ all starting from a node $v_0$ for given number of paths $k$ which results in minimal traversal cost where $\forall v \in (V \setminus v_0)$ are visited only once. \gls{vrp} is generalization of \gls{tsp} which only has one path.
     
@@ -72,12 +58,12 @@
     
     \textbf{Fesability of \gls{vrp} solution} for \gls{vrp} of routes $R$ is feasible only if each node $V_1$ is visited exactly once.
     
-    The cost of route $R_i$ which we aim to minimize is the sum of its weights (costs). If we operate in Euclidean space, then it is L2 norm of route locations.
+    \textbf{The cost of route $R_i$} which we aim to minimize is the sum of its weights (costs). If we operate in Euclidean space, then it is L2 norm of route locations.
     \begin{equation}
         C(R_i) := \sum_{k = 0}^{|R_i|} c_{r_k}_{r_k+1}
     \end{equation}
     
-    The cost of \gls{vrp} solution is a sum of route costs.
+    \textbf{The cost of \gls{vrp} solution} is the sum of route costs.
     \begin{equation}
         C(R) := \sum_{i = 1}^{|R|} C(R_i)
     \end{equation}
@@ -85,7 +71,7 @@
 \section{Vehicle Routing Flavors}
 Our modern world heavily relies on complex logistics networks. It requires to synchronize multimodal planning to ship your goods from one side of the world to your doorstep. In order to achieve this, multiple variants and flavours of \gls{vrp} had to be studied and implemented in the real world use cases. It goes from ordinary variants like measuring the capacity of cars to a more niche problem like eVRP where vehicles are required to make stops to recharge.
 
-All the flavours of \gls{VRP} can be mutually combined, which is usually the main area of research.
+All the flavours of \gls{vrp} can be mutually combined, which is usually the main area of research.
 
     \begin{figure}[ht]
         \centering
@@ -96,7 +82,7 @@ All the flavours of \gls{VRP} can be mutually combined, which is usually the mai
 
 The sections below are describing each flavour shown in \ref{fig:vrp-flavours}.
 
-    \subsection{Capacited Vehicle Routing Problem}
+    \subsection{Capacitated Vehicle Routing Problem}
     The \gls{cvrp} extends the regular \gls{cvrp} in introducing a capacity element for each customer. In the literature, it is sometimes referred to as a demand. The customer's demand is $d \in \mathbb{N}^+$ which may represent capacity in the form of weight, size but also in some abstract concepts such as a basket of apples. Additionally, each vehicle has a predefined capacity $Q > 0$.
     
     The \gls{cvrp} extends the solution feasibility formula by the following capacity constrain.
@@ -107,7 +93,7 @@ The sections below are describing each flavour shown in \ref{fig:vrp-flavours}.
     If the vehicle capacity of the fleet stays the same, we are dealing with \gls{cvrp} with homogeneous fleet. A fleet with varying capacity for each vehicle is a heterogeneous fleet.
     
     \subsection{Vehicle Routing Problem with Time Windows}
-    The \gls{vrptw} extends the regular \gls{vrp} by time constraint for each customer. Customers have assigned time window interval $[e_i, l_i]$ where $e_li < l_i$. The time interval is the request within a vehicle is supposed to visit the node. 
+    The \gls{vrptw} \cite{vrptw-solomon} extends the regular \gls{vrp} by time constraint for each customer. Customers have assigned time window interval $[e_i, l_i]$ where $e_li < l_i$. The time interval is the request within a vehicle is supposed to visit the node. 
     
     The time window can be either implemented as a hard constraint or a soft constraint. Hard constraint forces the vehicle to visit the node, i.e., the customer either in the given time interval or the solution is not feasible. Soft constrains are not strictly enforcing the vehicle to visit the customer, but they introduce a penalty for a violated interval barring a penalty cost. The penalty becomes a part of the cost function which \gls{vrp} aims to minimize.
     
@@ -128,13 +114,22 @@ The sections below are describing each flavour shown in \ref{fig:vrp-flavours}.
     TODO
     
     \subsection{Other Flavours}
-    Dial a Ride
-    Split Delivery VRP
-    Multi Depot VRP
+    Dial-a-Ride (DARP) proposed by Wilson et al. \cite{darp-proposed} in 1971 is a special case of dynamic \gls{vrp} with pick and deliver. Passengers request a ride at a specified origin and drop location with an optional time window. 
+    
+    Split Delivery \gls{vrp} \cite{split-deliver} is a variant where customers are allowed to be visited more than once. This can be convenient for deliveries of large capacity or stocking fulfillment centers.
+    
+    Multi Depot \gls{vrp} is a simplification of the vehicle routing problem with pick and deliver, where pick can happen only on predefined depot locations. This simplification of pickup location is making the problems less complex then \gls{vrppd}.
     
 \section{VRP in a Real-world}
 Consumer habits have been shifting towards online and the pandemic situation only accelerated this process. Delivery option is nowadays taken for granted and consumers are demanding a perfect delivery experience. In 2020, there has been shipped over 5.5 billion packages around the world \cite{num-shipped-packages}.
 
 Solving various flavors of \gls{VRP} efficiently in a reasonable time plays a crucial role for multiple businesses. For example, urban logistics is an essential part of the delivery process, not only it is the last part of the delivery chain, but frequently the courier interacts with the customer and delivery on time with proper ETA prediction is a must. It is also the most expansive part which makes up about 53\% of shipment’s total cost\cite{last-mile-cost}. Urban logistics by large benefits from a better and more optimized \gls{VRP} which increase the delivery efficiency and reduces the delivery cost. Delivery efficiency has been stated as the biggest challenge in last-mile deliveries by 25\% of surveyed companies in Logistics White Paper by ETA\cite{logistics-whitepaper}.
 
-At GoDeliver, we are building an autonomous last-mile delivery system and at the core is a planning system which is solving various \gls{vrp}. The flavour which we are solving is Dynamic Capacited Pick and Delivery Vehicle Routing Problem with Time Windows. The GoDeliver typical use case is food delivery with multi depots, the system has to be dynamic and flexible because a new customers are ordering stochasticaly. Another common usecase is grocerry delivery where we cloud have a one depot, time windows for customers and capacity for a vehicle.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.75\textwidth]{resources/intro/hofkorb.png}
+    \caption{Grocery delivery planning with multiple depots from the GoDeliver system}
+    \label{fig:hofkorb}
+\end{figure}
+
+At GoDeliver, we are building an autonomous last-mile delivery system and at the core is a planning system which is solving various \gls{vrp}. The flavour which we are focusing on is Dynamic Capacitated Vehicle Routing Problem with Time Windows and Pick and Delivery (CVRPDPTW). GoDeliver typical use case is on-demand food delivery with multiple depots (pick and deliver), this means that the system has to be dynamic and flexible because a new customers are ordering stochastically for a chosen time window. Another our common use case shown in \ref{fig:hofkorb} is grocery delivery with multiple depots, time windows, and capacity for customers.
