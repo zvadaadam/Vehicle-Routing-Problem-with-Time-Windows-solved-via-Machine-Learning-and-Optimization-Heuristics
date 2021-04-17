@@ -64,10 +64,10 @@ In this chapter, we will be covering the advanced theoretical background to full
         \end{equation}
         where $d_{\pi_{\theta}}(s)$ is stationary distribution of Markov chain for $\pi_{\theta}$, the probability of ending in a given state \cite{markov-bullshit}.
         \begin{equation}
-            d_{\pi_{\theta}} = \lim_{t -> \infty} P(S_t = s | s_0, \pi_{\theta})
+            d_{\pi_{\theta}} = \lim_{t \longrightarrow \infty} P(S_t = s | s_0, \pi_{\theta})
         \end{equation}
         
-        The objective function $J(\theta)$ optimizes the $\theta$ parameters via gradient ascent [TODO]. 
+        The objective function $J(\theta)$ optimizes the $\theta$ parameters via gradient ascent \cite{deep-learning}. 
         \begin{equation}
             \theta_{t+1} = \theta_{t} + \alpha \nabla J(\theta_{t})
         \end{equation}
@@ -79,20 +79,49 @@ In this chapter, we will be covering the advanced theoretical background to full
         \end{equation}
     
         \subsection{REINFORCE}\label{reinforce}
-        REINFORCE algorithm proposed by Williams \cite{reinforce} in 1992 is a policy gradient method to update the policy parameter $\theta$.
+        REINFORCE algorithm, proposed by Williams \cite{reinforce} in 1992, is a policy gradient method to update the policy parameter $\theta$.
         
-        \begin{algorithm}
+        Let us define the additional terms required by the REINFORCE algorithm. We define a trajectory $\tau$ which is a sequence of states, actions, and rewards. Episode is a trajectory which ends at the terminal state $S_t$.
+        \begin{equation}
+            \tau = (S_0, A_0, R_0, S_1, A_1, R_1, \cdots)
+        \end{equation}
+        
+        REINFORCE algorithm computes the policy gradient as follows
+        \begin{equation}
+            \nabla J(\theta) = \mathop{\mathbb{E}}[ G_{t} \nabla \ln \pi (A_t|S_t, \theta))]
+        \end{equation}
+        It is a simplification of a regular policy gradient because $Q_{\pi}(s, a) = \mathop{\mathbb{E}}[G_t|S_t = s, A_t = a]$ and in REINFORCE algorithm we rely on a full trajectory where we can estimate $G_t$ based on Monte-Carlo method which is describe in this article \cite{rl-intro}.
+        
+        \begin{algorithm}[H]
+        \SetAlgoLined
+        \KwResult{Updated $\theta$ that maximises reward}
+         Initialize $theta$ at random\;
+         Generate one episode $S_0, A_0, R_0, \cdots, S_T$\;
+         \For{$t = 1, 2, \cdots, T$}{
+          Estimate the the return $G_t$ since the time step t\;
+          $\theta \gets \theta + \alpha \gamma^t G_t \nabla \ln \pi(A_t|S_t, \theta)$
+         }
+         \caption{REINFORCE algorithm}
         \end{algorithm}
-    
+        
+        In the REINFORCE algorithm, the estimated gradient is highly effected by variance. A technique called baseline $b(S_t)$ is common to be used which subtracts a baseline from the estimated $G_t$ to reduce the variance \cite{baseline-artical}. The baseline function can be in many forms, but the most common one is to calculate the advantage function $A(s, a) = Q(s, a) - V(s)$ and use it to be subtracted from the gradient.
 
     \section{Attention Mechanism}\label{attention}
-    TODO    
-
-    \subsection{Transformer}\label{transformer}
-    TODO
     
-    \subsection{Graph Attention Network}\label{graph-attention-network}
-    TODO
+    \begin{figure}[ht]
+        \centering
+        \includegraphics[width=0.75\textwidth]{resources/theoretical-background/shiba-attention.png}
+        \caption{A Shiba Inu and what is caughting the network's attention \cite{attention-weng}} and photo credit by @mensweardog.
+        \label{fig:shiba}
+    \end{figure}
+    
+    \cite{lstm}
+
+        \subsection{Transformer}\label{transformer}
+        Vaswani et. al \cite{attention-is-all}
+    
+        \subsection{Graph Attention Network}\label{graph-attention-network}
+        TODO
     
     
 
