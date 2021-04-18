@@ -106,22 +106,75 @@ In this chapter, we will be covering the advanced theoretical background to full
         
         In the REINFORCE algorithm, the estimated gradient is highly effected by variance. A technique called baseline $b(S_t)$ is common to be used which subtracts a baseline from the estimated $G_t$ to reduce the variance \cite{baseline-artical}. The baseline function can be in many forms, but the most common one is to calculate the advantage function $A(s, a) = Q(s, a) - V(s)$ and use it to be subtracted from the gradient.
 
-    \section{Attention Mechanism}\label{attention}
+    \section{Attention}\label{attention}
+    Attention mechanism was first proposed by Bahdanau et al.\cite{first-attention} in 2014 with a problem to help memorize long source sentences in neural machine translation. Not long after that, this concept gave birth to Transformers which dramatically improved many domains, especially Natural Language Processing and brought state-of-the-art results \cite{gpt-2}.
     
     \begin{figure}[ht]
         \centering
-        \includegraphics[width=0.75\textwidth]{resources/theoretical-background/shiba-attention.png}
-        \caption{A Shiba Inu and what is caughting the network's attention \cite{attention-weng}} and photo credit by @mensweardog.
+        \includegraphics[width=0.5\textwidth]{resources/theoretical-background/shiba-attention.png}
+        \caption{A Shiba Inu and what is caughting the network's attention \cite{attention-weng}, photo credit by @mensweardog.}
         \label{fig:shiba}
     \end{figure}
     
-    \cite{lstm}
+    For humans, visual attention is allowing us to focus on certain regions as visualized on Figure \ref{fig:shiba}. Attention mechanism decides on which part of the given source should pay attention to. 
 
         \subsection{Transformer}\label{transformer}
-        Vaswani et. al \cite{attention-is-all}
-    
+        The Transformer neural network architecture proposed by Vaswani et. al \cite{attention-is-all} was one of the major breakthroughs in the field of Natural Language processes (NLP). Transformer is getting rid of recurrence \cite{lstm} in favor of the attention mechanism which allows global dependencies between input and output. 
+        %Additionally, they allows parallization 
+        
+        The Transformer architecture is based on encoder-decoder structure as shown on Figure \ref{fig:transformer}. Encoder maps input of sequence $x$ to continues representation $z$ which is taken by decoder and decodes it to output sequence $y$ one element at a time. The model is auto-regressive, it takes into account the previously generated output as additional input.
+        
+        \begin{figure}[ht]
+            \centering
+            \includegraphics[width=0.5\textwidth]{resources/theoretical-background/transformer-arch.jpeg}
+            \caption{The Transformer architecture, encoder on the left and decoder on the right \cite{attention-is-all}.}
+            \label{fig:transformer}
+        \end{figure}
+        
+            \subsubsection{Encoder}
+            The encoder on Figure \ref{fig:transformer} has $N$ identical layers (Vaswani et al. set $N=6$ \cite{attention-is-all}). Each layer has two sublayers, the first is multi-head attention \ref{multi-head-attention}, and the second is a simple fully connected feed-forward network. Each of the sublayers has a residual connection \cite{residual-connection} that sums the input and output of the sublayer and normalize it \cite{normalization}. 
+            
+            \begin{equation}
+                OutputSubLayer = Norm(x + SubLayer(x))
+            \end{equation}
+            
+            The residual connections are similar to the skip connection which propagates input of the sublayer to the output which helps to avoid exploding or vanishing gradient.
+            
+            \subsubsection{Decoder}
+            The decoder on Figure \ref{fig:transformer} is also built from $N$ identical layers and with similar sublayers as the encoder. The first sublayer is masked multi-head attention \ref{multi-head-attention} also with residual connection. The masking mechanism is only there to hide the future information because the Transformers are processing the input one by one. The next two sublayers of the decoder are same as the encoder with the only difference that multi-head attention \ref{multi-head-attention} receives part of the input from the encoder.
+            
+            \subsubsection{Multi-Head Attention}\label{multi-head-attention}
+            The major component of Transformers is Multi-Head Attention (MHA). It runs the input through an attention mechanism $h$ times in parallel. The independent attention outputs are then concatenated and transformed into the expected dimension as shown in Figure \ref{fig:multi-head-attention} \cite{attention-weng}.
+            
+            \begin{figure}[ht]
+                \centering
+                \includegraphics[width=0.5\textwidth]{resources/theoretical-background/multi-head-attention.png}
+                \caption{Multi-Head Attention component \cite{attention-weng}}
+                \label{fig:multi-head-attention}
+            \end{figure}
+            
+            The Multi-Head Attention takes the embedded input and split the input copy to Key $K$, Value $V$ and Query $Q$. They all have the same dimension of input sequence length and embedded vector size $d_{\text{model}}$ (Vaswani et al. set $d_{\text{model}}=512$ \cite{attention-is-all}).
+            
+            The matrices $K$, $V$, and $Q$ get multiplied for each head $i \in (1, \cdots, $h$)$ by trainable parameters $W_i^K$, $W_i^V$, and $W_i^Q$, respectively. Then it performs scaled dot-product attention as shown in equations \ref{kvq} and \ref{scalled-dot-product}
+            
+            \begin{equation}\label{kvq}
+                \text{head}_i = \text{ScaledDotAttention}(Q W_i^Q, K W_i^K, V W_i^Q)
+            \end{equation}
+            
+            \begin{equation}\label{scalled-dot-product}
+                \text{ScaledDotAttention}(Q, K, V) = \text{softmax}(\dfrac{Q K^T}{\sqrt{n}}) V
+            \end{equation}
+            
+            According to the paper\cite{attention-is-all}, the scaled dot product attention allows the model to jointly attend to information from different representation subspaces at different positions.
+            
+            Finally, we concatenate all head outputs $head_i$ for $i \in (1, \cdots, $h$)$ from scaled dot product attention and perform linear transformation by trainable parameter $W_0$ of \gls{mha}.
+            \begin{equation}
+                \text{MHA}(Q, K, V) = \text{Concat}(\text{head}_1, \cdots, \text{head}_h)W_0
+            \end{equation}
+            
         \subsection{Graph Attention Network}\label{graph-attention-network}
-        TODO
+        To understand the model used for solving \gls{VRPTW} we need a basic understanding what is Graph Attention Network.
+        \gls{gat} was first proposed by Veličković et al. \cite{gat} in 2017.
     
     
 
