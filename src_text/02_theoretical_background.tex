@@ -122,7 +122,7 @@ In this chapter, we will be covering the advanced theoretical background to full
         The Transformer neural network architecture proposed by Vaswani et. al \cite{attention-is-all} was one of the major breakthroughs in the field of Natural Language processes (NLP). Transformer is getting rid of recurrence \cite{lstm} in favor of the attention mechanism which allows global dependencies between input and output. 
         %Additionally, they allows parallization 
         
-        The Transformer architecture is based on encoder-decoder structure as shown on Figure \ref{fig:transformer}. Encoder maps input of sequence $x$ to continues representation $z$ which is taken by decoder and decodes it to output sequence $y$ one element at a time. The model is auto-regressive, it takes into account the previously generated output as additional input.
+        The Transformer architecture is based on encoder-decoder structure as shown on Figure \ref{fig:transformer}. Encoder maps the input sequence $x$ to continues representation $z$ which is taken by decoder and decodes it to output sequence $y$ one element at a time. The model is auto-regressive, it takes into account the previously generated output as additional input.
         
         \begin{figure}[ht]
             \centering
@@ -173,10 +173,42 @@ In this chapter, we will be covering the advanced theoretical background to full
             \end{equation}
             
         \subsection{Graph Attention Network}\label{graph-attention-network}
-        To understand the model used for solving \gls{VRPTW} we need a basic understanding what is Graph Attention Network.
-        \gls{gat} was first proposed by Veličković et al. \cite{gat} in 2017.
+        To understand the model used for solving \gls{vrptw} we need a basic understanding of \gls{gat}, first proposed by Veličković et al. \cite{gat} in 2017.
         
-        DO WE NEED TO???
+        It is a neural network architecture capable of operating on graph-structured data. \gls{gat} extend the work on Graph Convolution Networks \cite{gcn} which has a problem with generalizability because they are structure-dependent \cite{dgl-gat}. \gls{gat} address the shortcoming of \gls{gcn} by leveraging masked self-attentional layers \ref{attention}.
+        
+        \gls{gat} is a single layer (possibly can be stacked) which takes a set of nodes features $h = \{h_0, h_1, \cdots, h_N\}, h_i \in \mathbb{R}^F$ where N is the number of nodes and $F$ is the number of features for a node. The \gls{gat} layer assigning different importance to each node through the attention coefficients.
+        
+        \begin{equation}\label{edge-attention}
+            e^l_{ij} = a^l(W^l h_i^l, W^l h_j^l)
+        \end{equation}
+        
+        The equation \ref{edge-attention} is a linear transformation of node features and weight matrix $W^l$ which is used for calculating the attention coefficients via learnable parameter $a^l$. It is gathering information about the importance of node j’s features to node i.
+        
+        \begin{equation}\label{neighbout-attention}
+            \alpha_{ij}^l = \text{softmax}_j(e^l_{ij}) = \dfrac{exp(e^l_{ij})}{\sum_{k \in N_i} exp(e^l_{ik}}
+        \end{equation}
+        
+        The graph structural data are represented in attention via equation \ref{neighbout-attention} which is computed only for all neighbour nodes $N_i$ of node i. The softmax function is used to make the attention scores comparable across different nodes. 
+        
+        \begin{equation}\label{next-layer}
+            h_{i}^{l+1} = \sigma(\sum_{j \in N_i} \alpha_{ij}^l W^l h_i^l)
+        \end{equation}
+        
+        The equation \ref{next-layer} is aggregating together all attention embeddings of all neighbour nodes. If we perform multi-head attention on the final layer of \gls{gat} then computation of the final high level feature embedding is as follows
+        
+        \begin{equation}
+            h_{i}^{l+1} = \sigma(\dfrac{1}{K} \sum_{k = 1}^K \sum_{j \in N_i} \alpha_{ij}^l W^k h_i^l)
+        \end{equation}
+        
+        The aggregation process of a multi-head graph attentional layer for a given node is illustrated on Figure \ref{fig:gat-diagram}.
+        
+        \begin{figure}[ht]
+            \centering
+            \includegraphics[width=0.75\textwidth]{resources/theoretical-background/gat-diagram.png}
+            \caption{Multi-head attention with $K = 3$ heads \cite{gat}.}
+            \label{fig:gat-diagram}
+        \end{figure}
     
     
 

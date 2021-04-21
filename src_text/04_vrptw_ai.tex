@@ -4,6 +4,7 @@ In this chapter, we will review the current end-to-end \gls{ai} methods for solv
 Machine learning and artificial intelligence have been replacing many hand-engineered algorithms and providing state-of-the-art results. In recent years, reinforcement learning \ref{rl} and advances in attention models \ref{attention} has shown great promise to disrupt the field of heuristics algorithms \cite{rl-constraint-opt, attention-route, dpdp}. Heuristics algorithms \cite{heuristics-algo} are incomplete methods that can compute solutions efficiently, but are not able to prove the optimality of a solution. Most of the business challenges do not require the most optimal exact solution \cite{excat-algo} but focus on approximation of the optimal solution in a reasonable time.
 
 \section{Related Work}
+Researchers have been mainly active in solving general \gls{vrp}...
 TODO
 
 \section{Solution}
@@ -13,32 +14,35 @@ Let us describe the high-level concept behind the method. Consider we have a mod
 
     \begin{figure}[ht]
         \centering
-        \includegraphics[width=1.0\textwidth]{resources/vrptw-ai/attention-route-diagram.png}
-        \caption{High-level concept behind the method our solution}
+        \includegraphics[width=1.0\textwidth]{resources/vrptw-ai/attention-route-diagram.pdf}
+        \caption{High-level concept behind the used method.}
         \label{fig:attention-route-diagram}
     \end{figure}
 
     \subsection{Model Architecture}
-    The model architucture \cite{attention-route} is advacments of attention mechansims, transformers and graph attention netwoek.
+    The model architecture by \cite{attention-route} extended by time windows is leveraging recent advancements in attention mechanism. The model is built upon transformers \ref{transformer}, graph attention network \ref{graph-attention-network}, and reinforcement learning \ref{rl}. The network structure is encoder-decoder which is great for solving sequential decision problems. The structural input instance is extracted by the encoder \ref{encoder} and then the solution is incrementally constructed by the decoder \ref{decoder}.
     
-    The \gls{vrptw} instance input is consited from
+    The \gls{vrptw} input instance is consited from
     \begin{itemize}
-        \item $X = {x_1, \cdots, x_n})$
-        \item $x_0$
-        \item $D = {d_1, \cdots, d_n})$
-        \item $T = {(e_0, l_0), \cdots, (e_0, l_0)})$
+        \item $X = \{x_1, \cdots, x_n\}$ where $x_i$ is two-dimensional coordinates in the euclidean space.
+        \item $x_0$ is the location of depot.
+        \item $D = \{d_1, \cdots, d_n\})$ is the demand capacity for each of the locations.
+        \item $T = \{(e_1, l_1), \cdots, (e_n, l_n)\})$ is time windows for each of the location where $e_i$ is the beginning and $l_i$ is the end of the considered time window.
     \end{itemize}
     
-    The output
+    The output is the solution of VRPTW instance and is represented as a permutation $\pi$ of locations $X \cup x_0$.
     \begin{itemize}
-        \item $\pi = {\pi_1, \cdots, \pi_T} \in {x_0, \cdots, x_n})$ T is longer bacseu of depots
+        \item $\pi = \{\pi_1, \cdots, \pi_T\} \in \{x_0, \cdots, x_n\})$ 
     \end{itemize}
     
-    \subsubsection{Encoder}
+    \subsubsection{Encoder}\label{vrptw-encoder}
+    The encoder uses graph attention network \ref{graph-attention-network} to embed the node features to graph embedding. Then the decoder architecture is the same as the decoder of transformer \ref{transformer}. Typicaly, the decoder of transformer uses positional encoding \cite{positional-encoding} to embed the input, but in this case it has been replace with \gls{gat} since we deal with graph-based structure.
     
-    \subsubsection{Decoder}
+    
+    
+    \subsubsection{Decoder}\label{vrptw-decoder}
         
-    \subsection{Reinforcement Learning}
+    \subsection{Reinforcement Learning}\label{vrptw-rl}
         
     \subsection{Integrating Distance Matrix}
     Multidimensional scaling
