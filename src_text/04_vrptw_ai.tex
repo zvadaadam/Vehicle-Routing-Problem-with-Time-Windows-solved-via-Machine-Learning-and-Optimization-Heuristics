@@ -100,6 +100,34 @@ Let us describe the high-level concept behind the method. Consider we have a mod
     The output of the encoder's final layer is passed to the decoder, which is detailed in the next sections \ref{vrptw-decoder}.
     
     \subsubsection{Decoder}\label{vrptw-decoder}
+    Decoder works sequentially through timestamps $t \in \{0, \cdots, n\}$, at each timestamp one node is selected to be visited based on partial route $\pi_{1:t-1}$. It is predicting the probability distribution over nodes according to the node embedding and context vector of the encoder \ref{vrptw-encoder}.
+    
+    The decoder uses a new context vector $h_{c}^{'}$ which represents the state \ref{rl} and it goes as follows:
+    \begin{equation}\label{decode-state-vec}
+        h_{c}^{'} = \begin{cases} \text{concat}(h_N; h_0^N; D_t) & \mbox{if } t = 0 \\ \text{concat}(h_N; h_{\pi_{1:t-1}}^N; D_t) & \mbox{if } t > 0 \end{cases}
+    \end{equation}
+    The state of $h_{c}^{'}$ is concatenation of $h_N$, the output of the encoder, $h_{\pi_{1:t-1}}^N$, the embedding of previous partial solution, and $D_t$, the remaining demand capacity of the vehicle.
+    
+    Since the decoder architecture is transformer \ref{transformer} a multi-head attention layers continue and the are resposible for chosing the next node to visite which is defined as an action \ref{rl}.
+    
+    TODO MHA context embedings + mask with compatibility
+    TODO The calculation of compability+ mask with compatibility
+    
+    The final layer calculates the desired probability $p_{\theta}('pi_t|X, \pi_{1:t-1})$, a logit layer. It is predicted with a single-head attention layer as follows:
+    
+    \begin{equation}
+        q = W^Q h_c, k_j = W^K h_j^N
+    \end{equation}
+    
+    \begin{equation}
+        u_j = \begin{cases} C . \text{tanh}(q^T k_{c}) &\mbox{if }  d_j <= D_t \text{ and } x_j \notin \pi_{1:t-1} \\ -\infty &\mbox{otherwise} \end{cases}
+    \end{equation}
+    
+    If we would consider time window as a hard contraint, the calculation of compatibility would have to extended with condition to check fesibility of time windows.
+  
+    \begin{equation}\label{encoder-attention-score}
+        p_{\theta}('pi_t|X, \pi_{1:t-1}) = \dfrac{e^{u_j}}{\sum_{j'=0}^n e^{u_j'}}
+    \end{equation}
     
     \begin{figure}[ht]
         \centering
