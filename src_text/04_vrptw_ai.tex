@@ -147,30 +147,26 @@ Let us describe the high-level concept behind the method. Consider we have a mod
     \end{equation}
     
     \begin{equation}\label{encoder-attention-score}
-        p_{\theta}('pi_t|X, \pi_{1:t-1}) = \dfrac{e^{u_j}}{\sum_{j'=0}^n e^{u_j'}}
+        p_i = p_{\theta}(\pi_t|X, \pi_{1:t-1}) = \dfrac{e^{u_j}}{\sum_{j'=0}^n e^{u_{j'}}}
     \end{equation}
     
     \subsection{Reinforcement Learning}\label{vrptw-rl}
-    The model \ref{vrptw-model} based on \gls{vrptw} instance outputs probability distribution over nodes $p_{\theta}(\pi|X)$ which is used to sample a full feasible route.
+    The model \ref{vrptw-model} takes \gls{vrptw} instance and outputs probability distribution over nodes $p_{\theta}(\pi|X)$ which is used to sample a full feasible route as a solution $\pi$. The instance of \gls{vrptw} $S$ is defined as concatenation of locations, demand capacity and time windows for each node, $S = [X, D, T]$.
     
-    TODO define instance S = [X, D, T]
-    
-    In order to train the model, we need to define a reward, respectively, a cost function. The model is trained using REINFORCE algorithm \ref{reinforce} as proposed by Kool et al. \cite{attention-route}.
-    
-    REINFORCE algorithm is based on the computation of policy gradient which is defined for solving \gls{vrptw} as
+    To train the model, we have to define a reward, respectively, a cost function. The model is trained using REINFORCE algorithm \ref{reinforce} as proposed by Kool et al. \cite{attention-route}. The algorithm is based on the computation of the policy gradient, which is defined as
     \begin{equation}\label{encoder-attention-score}
-        \nabla_{\theta} \mathcal{J}(\theta|X) = \mathop{\mathbb{E}}[ L(\pi|X) - b(X)) \nabla \ln \pi (\pi|X))]
+        \nabla_{\theta} \mathcal{L}(\theta|X) = \mathop{\mathbb{E}}[ \mathcal{L}(\pi|X) - b(X)) \nabla \ln \pi (\pi|X))]
     \end{equation}
     
         \subsubsection{VRPTW Cost}\label{vrptw-rl}
-        In effectively solving \gls{vrptw}, the cost function is an integral part of a successfully trained model. In this thesis, we propose a new cost function to solve the vehicle routing problem with soft constrained time windows and demand capacity for each node.
+        For effectively solving \gls{vrptw}, the cost function is an integral part of a successfully trained model. In this thesis, we propose a new cost function to solve the vehicle routing problem with soft constrained time windows and demand capacity for each node.
         
         The cost function is ranking the given solution of \gls{vrptw} instance. It penalizes the solution based on the length of the routes, early and late visits, and unequal distribution of nodes across vehicles.
         
         For a given \gls{vrptw} instance $S$ and its solution $\pi$, we propose the cost function as follows:
         \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
         \begin{equation}\label{vrptw-cost}
-            L(\pi|S) = dis_p(\pi, S) + t_p(\pi, S) + bal_p(\pi, S)
+            \mathcal{L}(\pi|S) = dis_p(\pi, S) + t_p(\pi, S) + bal_p(\pi, S)
         \end{equation}
         \begin{equation}\label{distance-cost}
             dis_p(\pi, S) = \sum_{i=0}^N \norm{x_{\pi(i)} - x_{\pi(i+1)}}_2
@@ -189,25 +185,36 @@ Let us describe the high-level concept behind the method. Consider we have a mod
         
         \subsubsection{Training loop}\label{vrptw-loop}
         
+        Pseudocode of the \gls{rl} system training loop is as follows
+        
         \SetKwInput{KwInput}{Input} 
         \begin{algorithm}[H]
-            \KwInput{Number of epoch $E$, steps per epoch $T$, batch size $B$, significance $\alpha$} 
+            \KwInput{Number of epoch $E$, steps per epoch $T$, batch size $B$} %significance $\alpha$
             \KwResult{Updated $\theta$ that maximises reward}
             
             Initialize $\theta$ at random\;
             \For{$epoche = 1, 2, \cdots, E$}{
                 \For{$steps = 1, 2, \cdots, T$}{
-                    Compute multiple vehicles context embedding - encode
-                    Compute a new context embedding - decode
+                    Compute context embedding $h^N$ via decoder (\ref{vrptw-encoder});
+                    
+                    \For{$t = 1, 2, \cdots, N$}{
+                        Calculate $p_{\theta}(\pi_t|X, \pi_{1:t-1})$ via encoder for $t$ (\ref{vrptw-decoder});
+                        
+                        Pick an action based on probability distribution;
+                        
+                        Update the state by visiting a new node;
+                    }
+                    
+                    Compute reward $\mathcal{L}(\pi|S)$ (\ref{vrptw-cost});
+                    
+                    %Compute reward baseline;
+                    
+                    % $\nabla_{\theta} \mathcal{L} \gets \mathop{\mathbb{E}}[ \mathcal{L}(\pi|X) - b(X)) \nabla \ln \pi (\pi|X))]$;
+                    
+                    $\nabla_{\theta} \mathcal{L} \gets \mathop{\mathbb{E}}[ \mathcal{L}(\pi|X) \nabla \ln \pi (\pi|X))]$;
+                    
+                    $\theta \gets \text{Adam}(\theta, \nabla_{\theta} \mathcal{L})$;
                 }
-            Compute the output probability vector - final layer - log prob
-            Agent takes the action
-            Update state
-        Compute reward
-        Compute reward baseline
-        
-          Estimate the the return $G_t$ since the time step t\;
-          $\theta \gets \theta + \alpha \gamma^t G_t \nabla \ln \pi(A_t|S_t, \theta)$
          }
          \caption{REINFORCE algorithm}
         \end{algorithm}
