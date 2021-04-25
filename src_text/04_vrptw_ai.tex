@@ -19,7 +19,7 @@ Let us describe the high-level concept behind the method. Consider we have a mod
         \label{fig:attention-route-diagram}
     \end{figure}
 
-    \subsection{Model Architecture}
+    \subsection{Model Architecture}\label{vrptw-model}
     The model architecture \cite{attention-route} leveraging recent advancements in attention mechanism is here extended by the time window constraint. The model is built upon transformers \ref{transformer}, graph attention network \ref{graph-attention-network}, and reinforcement learning \ref{rl}. The network structure is encoder-decoder that fits well for solving sequential decision problems. The structural input instance is extracted by the encoder \ref{vrptw-encoder} and then the solution is incrementally constructed by the decoder \ref{vrptw-decoder}.
     
     The \gls{vrptw} input instance is consisted from:
@@ -102,18 +102,41 @@ Let us describe the high-level concept behind the method. Consider we have a mod
     \subsubsection{Decoder}\label{vrptw-decoder}
     Decoder works sequentially through timestamps $t \in \{0, \cdots, n\}$, at each timestamp one node is selected to be visited based on partial route $\pi_{1:t-1}$. It is predicting the probability distribution over nodes according to the node embedding and context vector of the encoder \ref{vrptw-encoder}.
     
+    \begin{figure}[ht]
+        \centering
+        \includegraphics[width=1.0\textwidth]{resources/vrptw-ai/decoder-diagram.png}
+        \caption{TODO \cite{attention-route}}
+        \label{fig:encoder-diagram}
+    \end{figure}
+    
     The decoder uses a new context vector $h_{c}^{'}$ which represents the state \ref{rl} and it goes as follows:
     \begin{equation}\label{decode-state-vec}
         h_{c}^{'} = \begin{cases} \text{concat}(h_N; h_0^N; D_t) & \mbox{if } t = 0 \\ \text{concat}(h_N; h_{\pi_{1:t-1}}^N; D_t) & \mbox{if } t > 0 \end{cases}
     \end{equation}
     The state of $h_{c}^{'}$ is concatenation of $h_N$, the output of the encoder, $h_{\pi_{1:t-1}}^N$, the embedding of previous partial solution, and $D_t$, the remaining demand capacity of the vehicle.
     
-    Since the decoder architecture is transformer \ref{transformer} a multi-head attention layers continue and the are resposible for chosing the next node to visite which is defined as an action \ref{rl}.
+    Due to the fact that the decoder architecture is transformer \ref{transformer}, the next layers are multi-head attentions which are responsible for choosing the next node to visit. This defines the system action \ref{rl}.
     
-    TODO MHA context embedings + mask with compatibility
-    TODO The calculation of compability+ mask with compatibility
+    The multi-head attention in the decoder is computed in a similar manner as in the decoder \ref{vrptw-encoder} with a little alternation.
+    \begin{equation}
+        q_{(c)m} = W_m^Q h_{c}^{'}, k_{jm} = W_m^K h_{j}^{N}, v_{jm} = W_m^V h_{j}^{N}
+    \end{equation}
     
-    The final layer calculates the desired probability $p_{\theta}('pi_t|X, \pi_{1:t-1})$, a logit layer. It is predicted with a single-head attention layer as follows:
+    \begin{equation}\label{compatibility-decoder}
+        u_{(c)j} = \begin{cases} q_c^T k_j &\mbox{if }  d_j <= D_t \text{ and } x_j \notin \pi_{1:t-1} \\ -\infty &\mbox{otherwise} \end{cases}
+    \end{equation}
+    
+    The equation \ref{compatibility-decoder} computes the compatibility score and performs a masking mechanism to mask the nodes which have already been visited during the partial route (besides depot $x_0$) and eliminates nodes where the vehicle capacity would overflow. If we would consider a time window as a hard constraint, the calculation of compatibility would have extended masking mechanism to show only nodes which correspond to the time $t$.
+    
+    \begin{equation}
+        h'_{(c)m} = \sum_{j=0}^n softmax(u_{(c)j}) v_jm
+    \end{equation}
+        
+    \begin{equation}
+        h_{c} = \text{MHA}(h_{c}^{'}) = \sum_{m=1}^M W_{m}^O h'_{(c)m}
+    \end{equation}
+    
+    In order to calculate the desired probability $p_{\theta}(\pi_t|X, \pi_{1:t-1})$, a logit layer. The final layer is a single-head attention.
     
     \begin{equation}
         q = W^Q h_c, k_j = W^K h_j^N
@@ -123,20 +146,72 @@ Let us describe the high-level concept behind the method. Consider we have a mod
         u_j = \begin{cases} C . \text{tanh}(q^T k_{c}) &\mbox{if }  d_j <= D_t \text{ and } x_j \notin \pi_{1:t-1} \\ -\infty &\mbox{otherwise} \end{cases}
     \end{equation}
     
-    If we would consider time window as a hard contraint, the calculation of compatibility would have to extended with condition to check fesibility of time windows.
-  
     \begin{equation}\label{encoder-attention-score}
         p_{\theta}('pi_t|X, \pi_{1:t-1}) = \dfrac{e^{u_j}}{\sum_{j'=0}^n e^{u_j'}}
     \end{equation}
     
-    \begin{figure}[ht]
-        \centering
-        \includegraphics[width=1.0\textwidth]{resources/vrptw-ai/decoder-diagram.png}
-        \caption{TODO \cite{attention-route}}
-        \label{fig:encoder-diagram}
-    \end{figure}
-    
     \subsection{Reinforcement Learning}\label{vrptw-rl}
+    The model \ref{vrptw-model} based on \gls{vrptw} instance outputs probability distribution over nodes $p_{\theta}(\pi|X)$ which is used to sample a full feasible route.
+    
+    TODO define instance S = [X, D, T]
+    
+    In order to train the model, we need to define a reward, respectively, a cost function. The model is trained using REINFORCE algorithm \ref{reinforce} as proposed by Kool et al. \cite{attention-route}.
+    
+    REINFORCE algorithm is based on the computation of policy gradient which is defined for solving \gls{vrptw} as
+    \begin{equation}\label{encoder-attention-score}
+        \nabla_{\theta} \mathcal{J}(\theta|X) = \mathop{\mathbb{E}}[ L(\pi|X) - b(X)) \nabla \ln \pi (\pi|X))]
+    \end{equation}
+    
+        \subsubsection{VRPTW Cost}\label{vrptw-rl}
+        In effectively solving \gls{vrptw}, the cost function is an integral part of a successfully trained model. In this thesis, we propose a new cost function to solve the vehicle routing problem with soft constrained time windows and demand capacity for each node.
         
+        The cost function is ranking the given solution of \gls{vrptw} instance. It penalizes the solution based on the length of the routes, early and late visits, and unequal distribution of nodes across vehicles.
+        
+        For a given \gls{vrptw} instance $S$ and its solution $\pi$, we propose the cost function as follows:
+        \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+        \begin{equation}\label{vrptw-cost}
+            L(\pi|S) = dis_p(\pi, S) + t_p(\pi, S) + bal_p(\pi, S)
+        \end{equation}
+        \begin{equation}\label{distance-cost}
+            dis_p(\pi, S) = \sum_{i=0}^N \norm{x_{\pi(i)} - x_{\pi(i+1)}}_2
+        \end{equation}
+        The equation \ref{distance-cost} calculates the length of all routes in Euclidean space.
+        
+        \begin{equation}\label{time-cost}
+            t_p(\pi, S) = \sum_{i=0}^N (I_{e_i > \widetilde{t}_i} (e_i - \widetilde{t}_i) p_e + I_{l_i < \widetilde{t}_i} (\widetilde{t}_i - l_i) p_l)
+        \end{equation}
+        The equation \ref{time-cost} calculates the penalty for early or late arrival. The time of the visit for a given node $i$ is defined by vector $\widetilde{t}_i$. We assume that the travel speed is always identical and we approximate that one unit of distance equals to one unit of time. The vector $I$ behaves as a mask $I \in (0, 1)^n$ which represents if either early or late arrival occurred. The penalty for late arrival $p_l$ should be greater than for early arrival $p_e$ and finding the proper penalties will be empirically determined as a part of experiment chapter \ref{penalty-experiment}.
+        
+        \begin{equation}\label{balance-cost}
+            bal_p(\pi, S) = \sigma([|R_0|, \cdots, |R_k|])
+        \end{equation}
+        The last subpart of the cost function is calculating balance cost \ref{balance-cost} that aims to evenly distribute the number of nodes in a route $R_i$ by minimizing its standard deviation. In logistics, we expect to utilize couriers evenly.
+        
+        \subsubsection{Training loop}\label{vrptw-loop}
+        
+        \SetKwInput{KwInput}{Input} 
+        \begin{algorithm}[H]
+            \KwInput{Number of epoch $E$, steps per epoch $T$, batch size $B$, significance $\alpha$} 
+            \KwResult{Updated $\theta$ that maximises reward}
+            
+            Initialize $\theta$ at random\;
+            \For{$epoche = 1, 2, \cdots, E$}{
+                \For{$steps = 1, 2, \cdots, T$}{
+                    Compute multiple vehicles context embedding - encode
+                    Compute a new context embedding - decode
+                }
+            Compute the output probability vector - final layer - log prob
+            Agent takes the action
+            Update state
+        Compute reward
+        Compute reward baseline
+        
+          Estimate the the return $G_t$ since the time step t\;
+          $\theta \gets \theta + \alpha \gamma^t G_t \nabla \ln \pi(A_t|S_t, \theta)$
+         }
+         \caption{REINFORCE algorithm}
+        \end{algorithm}
+        
+    
     \subsection{Integrating Distance Matrix}
-    Multidimensional scaling
+    TODO - Multidimensional scaling
