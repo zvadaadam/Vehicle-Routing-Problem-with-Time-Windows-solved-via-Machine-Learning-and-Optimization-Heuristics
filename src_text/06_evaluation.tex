@@ -1,5 +1,32 @@
 \chapter{Evaluation}
-Choosing TW penalties
-Model genealization
-Training process - loss + used parametes
-I1 vs Or-tools vs RL
+
+In this chapter, we will evaluate our proposed planning model based on reinforcement learning and attention mechanism \ref{vrptw-model}.
+
+\section{Dataset}
+The dataset used for training and evaluation was generated on the fly via a uniform probability distribution within a given range. The reason we decided to generate the data is that learning reinforcement policy requires a large amount of training data. Since it learns by interacting with the environment, we do not need labeled datasets and generating them seems as the best approach. Nevertheless, in further work, the model will require other kinds of distribution to simulate a real world demand.
+
+In real-world routing applications, the geographic coordinate system is typically used for specifying locations. However, our proposed model requires locations between $[0, 1]$ to achieve model convergence. The locations of depots and delivery nodes were generated via uniform distribution within a range of $[0, 1] \times [0, 1]$.
+
+The data for the demand capacity of a delivery node is a discrete number $\{1, \cdots, 9\}$ chosen uniformly at random with assumption that the depot has a demand capacity of zero.
+
+Lastly, each location has assigned time windows that work as a soft constraint at which time a vehicle is supposed to visit the node. We generate different lengths of time windows based on the problem size (20, 50, 100). For the problem size of 20 nodes, the time window value occurs in a range of $\{0, \cdots, 10\}$ with the condition that the length of the time window is less than four. The problem size of 50 nodes has the upper bound set to 20 with a maximal length of 6 and the case of 100 nodes, the upper bound is 40 and the maximal window length is 9. Similarly, the start and end of a time window are generated with uniform distribution.
+
+\section{Sample Solutions}
+Vizulization of GOOD plan for 20 & 50!
+
+\section{Experiments}
+\subsection{Time Windows}
+- tweaking penalities
+- before & after
+
+\subsection{Balancing Plans}
+Balance Delivery Plans
+- before & after
+
+\subsection{Generalization}
+Model generalizations
+- size matters
+
+\subsection{Training Process}
+
+\section{Benchmarking}
