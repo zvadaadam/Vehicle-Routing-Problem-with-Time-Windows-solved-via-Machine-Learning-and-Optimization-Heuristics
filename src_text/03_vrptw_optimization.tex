@@ -1,13 +1,55 @@
 \chapter{VRPTW via Optimization}
-    
+
+
 \section{Insertion Heuristics}
-TODO
-    
-\section{Genetic Approach}
 TODO
         
 \section{Google OR-Tools}
 TODO
     
-\section{Hybrid Adaptive Large Neighbourhood Search}
-TODO
+\section{Large Neighborhood Search}
+Heuristics based on large neighborhood search have shown superior results in solving a wide variety of routing problems. Large neighborhood search was first introduced by Shaw \cite{shaw-lns} in 1997.
+
+Large neighborhood search is an iterative algorithm that gradually improves its solution by exploring its neighborhoods. The neighborhoods are defined by applying \emph{destroy} and \emph{repair} operator. The destroy operator removes a random part of the solution such that different parts are destroyed in each iteration. The repair operator takes the partial solution and rebuilds into a fully feasible solution \cite{lns}.\newline
+
+In the implementing of large neighborhood search, the most important is to pick the proper degree of destruction for the destroy operator. If it destroys a small part of the solution, then it leads to ineffective exploration of the search space. In the opposite, when destroying large parts of the solution, the algorithm will keep re-optimizaing, which yields poor quality solutions with higher complexity \cite{lns}. The degree of destruction can be either chosen randomly or it can be gradually increased during the execution.\newline
+
+\begin{algorithm}[H]
+    \SetAlgoLined
+    Initialize a feasible solution $x_b$;
+    
+        \While{stopping criteria is met}{
+    
+            $x_t$ = repair(destroy($x_b$));
+            
+            \If{accept($x_t$, $x$))}{
+                Accept a new solution $x = x_t$;
+            }
+            
+            \If{cost($x_t$) $>$ cost($x_b$)}{
+                
+                Keep the best $x_b = x_t$;
+            
+            }
+        }
+        return $x_b$;
+    \caption{Large Neighborhood Search}
+\end{algorithm}
+
+
+The original large neighborhood search algorithm only accepted a superior solution based on the cost function. To achieve better exploration, a new acceptance criterium was used, inspired by the algorithm of simulated annealing \cite{lns-anneling}. The algorithm accepts the solution $x$ based on probability $e^{(c(x_t) - c(x))/T}$ where $T$ is the parameter for temperature. The temperature is gradually decreasing resulting in accepting fewer deteriorating solutions.
+
+\subsection{Adaptive Large Neighborhood Search}
+Adaptive Large Neighborhood Search is an extension of \gls{lns} that was proposed by Ropke et. al \cite{alns} in 2006.
+
+\gls{alns} supports multiple destroy operators and repair methods.
+
+and insertion operators are selected based on their past performance during the search, usually by employing a roulette wheel selection process with an adaptive weight adjusting mechanism \cite{Azi2014, Gschwind2016, Masmoudi2020}. Ropke and Pisinger (2006) \cite{Ropke2006} used the adaptive large neighborhood search heuristic to solve the PDP with time windows. Their algorithm used removal and insertion operators already existing in the literature, including the removal operator by Shaw (1997) \cite{Shaw1997}, and an acceptance criterion for new solutions known from simulated annealing. The algorithm by Ropke and Pisinger has proven to be powerful and has served as a building block for many further studies in complicated routing problems, particularly PDP and DARP \cite{Gschwind2016, Braekers2016, Masmoudi2016, Belhaiza2017, Drexl2018, Belhaiza2019, Masmoudi2020, Wang2020, Cauchi2020, Malheiros2021}. Gschwind and Drexl (2016) \cite{Gschwind2016} adopted the algorithm from Ropke and Pisinger and added three more removal operators. They also demonstrated how to test a new solution for feasibility in an amortized constant time. Their version of the adaptive large neighborhood search produced better solutions on standard DARP instances compared to the vast majority of other algorithms, except for the hybrid genetic algorithm by Masmoudi et al. (2017) \cite{Masmoudi2017}.
+\vspace{0.5cm}
+
+The other well-known category of metaheuristics are population-based methods, which are inspired by natural processes, such as the evolution of species or the behavior of insects. All successful population-based heuristics rely on local search methods to drive the search towards promising areas and to avoid local optima. As a result, the majority of population-based algorithms are naturally hybrid \cite{toth2015vrp}.
+
+
+\section{Ant Colony Optimization}
+This metaheuristic has also proven practical for many routing problems. It is inspired by the pheromone mechanism used by ants for coordination. Each ant simulates a solution by traversing the graph along its edges and accumulates pheromons along the edges it traversed. In each iteration, the ants select the edges with a probability proportional to the pheromon value. The pheromon evaporates after a given number of iterations, so the most promising edges remain at the end \cite{Bono2020, Solnon2010}. The algorithm by Reimann et al. (2004) \cite{Reimann2004} was one of the most successful.
+Ant colony optimization algorithm is particularly interesting in dynamic and stochastic settings. When new information is received, such as a new request arrives, or some delays occur, the algorithm uses the pheromone trails from previous iterations. This relies on the assumption that the new information does not disrupt the current solution too much and that some patterns can still be exploited \cite{Schyns2015, Bono2020}.
