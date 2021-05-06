@@ -10,7 +10,7 @@ In this chapter, we review, multiple approaches for solving \gls{vrptw} via opti
 
 In the field of operations research, approximate heuristics may be divided into \emph{constructive heuristics} and \emph{metaheuristics}. Constructive heuristics are used to provide an initial solution in a matter of seconds, which is later optimized. Metaheuristics is end-to-end algorithm that takes a problem instance and calculates its suboptimal solution. Metaheuristics can be further divided into \emph{local search method} which explores the search space by iterativly moving to a better solution, or \emph{population-based methods} that generate a set of solutions that are continually evolving \cite{vrp-bible}.
 
-\section{Insertion Heuristics}
+\section{Insertion Heuristics}\label{insertion-heuristics}
 Insertion heuristic is a constructive heuristic first proposed by Jaw et. al \cite{i1-heuristics} in 1986 and later that year extended by Solomon et al. \cite{solomon-insertion-tw} to supporting time windows.
 
 The insertion heuristic works by gradually iterating through all the nodes considered to be planned. For each of the nodes, the algorithm tries to insert it to all possible positions of the plans, then it picks the best insertion based on the calculated penalty. By repeating this process for all the nodes, a fully feasible solution is constructed.\newline
@@ -55,7 +55,7 @@ Insertion heuristic is mainly driven by the cost function that returns the penal
 
 It very common with dynamic \gls{vrp} \ref{dynamic} to continuously recalculate delivery plans based on triggers such as a new delivery order. The advantage of this heuristic is that it can leverage on a given previous solution and does not need to construct it from scratch. 
 
-\section{Google OR-Tools}
+\section{Google OR-Tools}\label{or-tools}
 We have noticed that many of the production solutions in the field of logistics use some type of optimization framework. The framework allows to describe the routing problem using their specific notation and their optimization library finds its solution. They usually implement variants of local search algorithms. However, their are fairly flexible and they serve as a great reference point for any benchmarking.
 
 In this thesis, we use Google OR-Tools\footnote{\url{https://developers.google.com/optimization}} an open source tool developed to solve optimization problems in vehicle routing, network flows, integer and linear programming, and constraint programming \cite{ortools}. We have chosen this optimization framework because the operations research community uses OR-Tools as a main benchmark and it supports soft constraint programming.

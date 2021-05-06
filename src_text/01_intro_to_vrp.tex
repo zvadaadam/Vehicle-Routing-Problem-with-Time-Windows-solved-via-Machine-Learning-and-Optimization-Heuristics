@@ -56,7 +56,7 @@
         \end{itemize}
     \end{itemize}
     
-    \textbf{Fesability of \gls{vrp} solution} for \gls{vrp} of routes $R$ is feasible only if each node $V_1$ is visited exactly once.
+    \textbf{Feasibility of \gls{vrp} solution} for \gls{vrp} of routes $R$ is feasible only if each node $V_1$ is visited exactly once.
     
     \textbf{The cost of route $R_i$} which we aim to minimize is the sum of its weights (costs). If we operate in Euclidean space, then it is L2 norm of route locations.
     \begin{equation}
@@ -107,16 +107,16 @@ The sections below are describing each flavour shown in \ref{fig:vrp-flavours}.
     \subsection{Static vs. Dynamic}\label{dynamic}
     When solving the vehicle routing model, usually we assume that all the input data are static and known with certainty. However, this is not the case in real-life applications where data such as customer demand or travel time are often incomplete or not precise during the planning phase, they are only gradually revealed and specified.
     
-    \textbf{Static \gls{vrp}} does not assume that the input data could be subject to change. The \textbf{dynamic \gls{vrp}} is aware about the information evolution\cite{psaraftis} and its goal is to obtain a robust routing planner that will be able to solve already seen instance with subject to small changes without need of recalculating the whole instance again. This is called a priori optimization, after solving a given instance of a combinatorial optimization problem, it becomes necessary to repeatedly solve many other instances with a small variation from the original instance but without reconsideration of the entire problem \cite{apriori-optimization}.
+    \textbf{Static \gls{vrp}} does not assume that the input data could be subject to change. The \textbf{dynamic \gls{vrp}} is aware about the information evolution\cite{psaraftis} and its goal is to obtain a robust routing planner that will be able to solve already seen instances with subject to small changes without the need of recalculating the whole instance again. This is called a priori optimization, after solving a given instance of a combinatorial optimization problem, it becomes necessary to repeatedly solve many other instances with a small variation from the original instance but without reconsideration of the entire problem \cite{apriori-optimization}.
     
     In this thesis, the \gls{vrp} based on \gls{ai} could be a great candidate for dynamic \gls{vrp} even though, the entire instance is being recalculated. The reason is that the problem solution is calculated in a seconds instead of minutes and the \gls{ai} technically already seen the instance in some variation during the training phase.
     
     Dynamic \gls{vrp} can be achieved with enough robust architecture around the core planner and periodically recalculating the instance with newly revealed information. The planner needs to take its previous solution as an input so the part of the problem does not need to be recalculated. This approach tends to be more exploitative since it is finding a solution in a predefined search space. It would benefit from introducing an explorative element which would diversify the search and could find better cost in a different local optimum.
 
-    \subsection{Deterministics vs. Stochastic}\label{dynamic}
+    \subsection{Deterministic vs. Stochastic}\label{dynamic}
     Psaraftis \cite{psaraftis} stated that there are two important dimensions of input data, information evolution which is used in dynamic \gls{vrp} and quality of information for stochastic \gls{vrp}. The majority of studied \gls{vrp} models are under the assumption that all the information necessary to formulate the problems is known and readily available. This is true but only for the deterministic settings \cite{vrp-bible}.
     
-    A \textbf{\gls{vrp} is stochastic} \cite{stochastic-vrp} when some of its data behave as random variables, and the routes must be defined before the values of these random variables become known. Based on the probability distribution of the random variables, we may extract some hidden information and use it to our advantage in the planning process. The newly created plans will have the incorporated stochastic information and the routing decisions may lead to different decision because of the stochastic information being part of the cost function.
+    A \textbf{\gls{vrp} is stochastic} \cite{stochastic-vrp} when some of its data behave as random variables, and the routes must be defined before the values of these random variables become known. Based on the probability distribution of the random variables, we may extract some hidden information and use it to our advantage in the planning process. The newly created plans will have incorporated stochastic information and the routing decisions may lead to different decision because of the stochastic information being part of the cost function.
     
     A specific real-life example of stochastic \gls{vrp} would be if we consider an electric fleet of shared mobility vehicles and treating the locations of Blinkee electric scooters as random variables. Based on the probability distributions of Blinkee scooter we may predict the time and location where courier will transfer to new fully charged Blinkee scooter. This action will be incorporated into the planned routes.
     

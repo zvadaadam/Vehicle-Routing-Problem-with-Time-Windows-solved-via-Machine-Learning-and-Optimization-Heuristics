@@ -59,8 +59,20 @@
 \author{Adam Zvada} %author's name without academic degrees
 \supervisor{doc. Ing. Pavel Kordík, Ph.D.}
 \acknowledgements{TODO}
-\abstractCS{TODO}
-\abstractEN{TODO}
+\abstractCS{
+Pro řešení vehicle routing problému byli navržen nové přístupy v oblasti strojového učení, ale přesto nebyla věnována pozornost variantě směrování vozidel s časově omezenými časovými omezeními. I když je to nutnost pro každého logistického plánovače připraveného na produkci.
+
+Tato práce navrhuje novou metodu řešení problému směrování vozidla s časově omezenými časovými omezeními (VRPTW) pomocí hlubokého učení výztuže. Model je postaven na architektuře Transformer využívající Graph Attention Network pro vložení vstupní instance. Model používá nově navrženou funkci odměny, která zahrnuje omezení časového okna. Práce také zkoumá další metaheuristické metody pro řešení VRPTW, které slouží ke srovnávání výkonu modelu.
+
+Výsledkem této práce je end-to-end model hlubokého učení, který řeší VRPTW, ale stále ho předčí řešitelé metaheuristiky.
+}
+\abstractEN{
+A novel approaches in the field of machine learning has been proposed to solve the vehicle routing problem, but yet a variant of vehicle routing with soft constrained time windows has received no attention. Even though it is a must for any production ready logistics planner.
+
+This thesis proposes a new method for solving a vehicle routing problem with soft constrained time windows (VRPTW) using deep reinforcement learning. The model is built upon Transformer architecture utilizing Graph Attention Network for embedding the input instance. The model is using a newly proposed reward function that incorporates the time window constraint. The thesis also explores other metaheuristics methods for solving VRPTW which is used to benchmark the model performance. 
+
+The result of this thesis is end-to-end deep learning model solving VRPTW but it is still outperformed by metaheuristics solvers.
+}
 \placeForDeclarationOfAuthenticity{Prague} %where you have signed the declaration
 \keywordsCS{TODO\newpage}
 \keywordsEN{TODO}
