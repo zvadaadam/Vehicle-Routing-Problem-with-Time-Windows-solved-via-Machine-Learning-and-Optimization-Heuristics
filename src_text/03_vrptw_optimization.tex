@@ -11,8 +11,50 @@ In this chapter, we review, multiple approaches for solving \gls{vrptw} via opti
 In the field of operations research, approximate heuristics may be divided into \emph{constructive heuristics} and \emph{metaheuristics}. Constructive heuristics are used to provide an initial solution in a matter of seconds, which is later optimized. Metaheuristics is end-to-end algorithm that takes a problem instance and calculates its suboptimal solution. Metaheuristics can be further divided into \emph{local search method} which explores the search space by iterativly moving to a better solution, or \emph{population-based methods} that generate a set of solutions that are continually evolving \cite{vrp-bible}.
 
 \section{Insertion Heuristics}
-Insertion heuristic is a constructive heuristic first proposed by Jang-Jei Jaw et. al \cite{i1-heuristics} in 1986.
+Insertion heuristic is a constructive heuristic first proposed by Jaw et. al \cite{i1-heuristics} in 1986 and later that year extended by Solomon et al. \cite{solomon-insertion-tw} to supporting time windows.
+
+The insertion heuristic works by gradually iterating through all the nodes considered to be planned. For each of the nodes, the algorithm tries to insert it to all possible positions of the plans, then it picks the best insertion based on the calculated penalty. By repeating this process for all the nodes, a fully feasible solution is constructed.\newline
+
+\begin{algorithm}[H]
+    \SetAlgoLined
+    \For{$x \in X$}{
         
+        bestPenalty = MAX;
+        
+        \For{$r \in R$}{
+        
+            let $l$ be a length of route $r$;
+            
+            \For{$i \in \{1, \cdots, l + 1\}$}{
+            
+                \For{$j \in \{i + 1, \cdots, l + 2)\}$}{
+                
+                    Try to insert on $\pi_{ij}^{r}$ the node $x$;
+                    
+                    Calculate newPenalty of the insert $\pi_{ij}^{r}$;
+                    
+                    \If{ $\text{bestPenalty} > \text{newPenalty}$ }{
+                        $\text{bestInsert} \gets (i, j)$;
+                        
+                        $\text{bestPenalty} \gets \text{newPenalty}$;
+                    }
+                }
+            }
+            
+            Perform best insert $\pi_{\text{bestInsert}}^{r}$ the node $x$;
+        }
+    }
+    
+    return $\pi$;
+    \caption{Insertion Heuristic}
+\end{algorithm}
+
+\newline
+
+Insertion heuristic is mainly driven by the cost function that returns the penalty for a given set of plans. The cost function has to consider the distance of a plan but also include the time window slack due to the insertion \cite{i1-tw}.
+
+It very common with dynamic \gls{vrp} \ref{dynamic} to continuously recalculate delivery plans based on triggers such as a new delivery order. The advantage of this heuristic is that it can leverage on a given previous solution and does not need to construct it from scratch. 
+
 \section{Google OR-Tools}
 We have noticed that many of the production solutions in the field of logistics use some type of optimization framework. The framework allows to describe the routing problem using their specific notation and their optimization library finds its solution. They usually implement variants of local search algorithms. However, their are fairly flexible and they serve as a great reference point for any benchmarking.
 
@@ -32,7 +74,7 @@ OR-Tools implements many well-known metaheuristics such as
         \item OBJECTIVE\_TABU\_SEARCH Uses tabu search on the objective value of a solution to escape local minima \cite{objective-tabu-search}.
 \end{itemize}
 
-\section{Large Neighborhood Search}\ref{lns}
+\section{Large Neighborhood Search}\label{lns}
 Heuristics based on large neighborhood search have shown superior results in solving a wide variety of routing problems. Large neighborhood search was first introduced by Shaw \cite{shaw-lns} in 1997.
 
 Large neighborhood search is an iterative algorithm that gradually improves its solution by exploring its neighborhoods. The neighborhoods are defined by applying \emph{destroy} and \emph{repair} operator. The destroy operator removes a random part of the solution such that different parts are destroyed in each iteration. The repair operator takes the partial solution and rebuilds into a fully feasible solution \cite{lns}.

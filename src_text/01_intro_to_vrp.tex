@@ -99,7 +99,7 @@ The sections below are describing each flavour shown in \ref{fig:vrp-flavours}.
     
     In this thesis, we will be focusing on soft constraints for time windows since it is a better reflection of real world use cases. Most businesses allow couriers to arrive late or early, but these types of arrivals are supposed to be minimized.
     
-    \subsection{Pick and Deliver}
+    \subsection{Pick and Deliver}\label{pick-and-delivery}
     The \gls{pdp} extends the regular \gls{vrp} by pairing pick and drop with precedence relationships, in which a pickup point must precede the paired delivery point. This flavour of \gls{vrp} is one of the most complex and even challenging for conventional methods like optimization heuristics algorithms.
     
     The feasibility of a \gls{pdp} solution is checking whether all delivery points have preceded pickup point.
@@ -118,14 +118,14 @@ The sections below are describing each flavour shown in \ref{fig:vrp-flavours}.
     
     A \textbf{\gls{vrp} is stochastic} \cite{stochastic-vrp} when some of its data behave as random variables, and the routes must be defined before the values of these random variables become known. Based on the probability distribution of the random variables, we may extract some hidden information and use it to our advantage in the planning process. The newly created plans will have the incorporated stochastic information and the routing decisions may lead to different decision because of the stochastic information being part of the cost function.
     
-    A specific real-life example of stochastic \gls{vrp} would be if we consider electric fleet of shared mobility vehicles and treating locations of Blinkee electric scooters as a random variables. Based on the probability distributions of Blinkee scooter we may predict the time and location where courier will transfer to new fully charged Blinkee scooter. This action will be incorporated into the planned routes.
+    A specific real-life example of stochastic \gls{vrp} would be if we consider an electric fleet of shared mobility vehicles and treating the locations of Blinkee electric scooters as random variables. Based on the probability distributions of Blinkee scooter we may predict the time and location where courier will transfer to new fully charged Blinkee scooter. This action will be incorporated into the planned routes.
     
     In contrast, \textbf{deterministic \gls{vrp}} has no random information which could be leveraged before the execution of routes and all the given information are known with certainty. In this thesis, we are focusing on deterministic \gls{vrp}.
     
     \subsection{Other Flavours}
     Dial-a-Ride (DARP) proposed by Wilson et al. \cite{darp-proposed} in 1971 is a special case of dynamic \gls{vrp} with pick and deliver. Passengers request a ride at a specified origin and drop location with an optional time window. 
     
-    Split Delivery \gls{vrp} \cite{split-deliver} is a variant where customers are allowed to be visited more than once. This can be convenient for deliveries of large capacity or stocking fulfillment centers.
+    \label{split-delivery}Split Delivery \gls{vrp} \cite{split-deliver} is a variant where customers are allowed to be visited more than once. This can be convenient for deliveries of large capacity or stocking fulfillment centers.
     
     Multi Depot \gls{vrp} is a simplification of the vehicle routing problem with pick and deliver, where pick can happen only on predefined depot locations. This simplification of pickup location is making the problems less complex then \gls{vrppd}.
     
