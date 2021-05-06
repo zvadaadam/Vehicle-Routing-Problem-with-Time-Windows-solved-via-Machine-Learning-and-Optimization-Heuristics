@@ -1,4 +1,4 @@
-\chapter{VRPTW via Optimization}
+\chapter{VRPTW via Optimization}\label{vrptw-optimization}
 In this chapter, we review, multiple approaches for solving \gls{vrptw} via optimization techniques with the objective to find suboptimal solutions in a reasonable time. The real-life use cases of \gls{vrp} are demanding to quickly find a good enough solution for large instances and this is achieved by applying handcrafted heuristics.
 
 \begin{figure}[ht]
@@ -13,7 +13,7 @@ In the field of operations research, approximate heuristics may be divided into 
 \section{Insertion Heuristics}\label{insertion-heuristics}
 Insertion heuristic is a constructive heuristic first proposed by Jaw et. al \cite{i1-heuristics} in 1986 and later that year extended by Solomon et al. \cite{solomon-insertion-tw} to supporting time windows.
 
-The insertion heuristic works by gradually iterating through all the nodes considered to be planned. For each of the nodes, the algorithm tries to insert it to all possible positions of the plans, then it picks the best insertion based on the calculated penalty. By repeating this process for all the nodes, a fully feasible solution is constructed.\newline
+The insertion heuristic works by gradually iterating through all the nodes considered to be planned. For each of the nodes, the algorithm tries to insert it to all possible positions of all plans, then it picks the best insertion based on the calculated penalty. By repeating this process for all the nodes, a fully feasible solution is constructed.\newline
 
 \begin{algorithm}[H]
     \SetAlgoLined
@@ -108,10 +108,7 @@ The original large neighborhood search algorithm only accepted a superior soluti
 \subsection{Adaptive Large Neighborhood Search}
 Adaptive Large Neighborhood Search is an extension of \gls{lns} that was proposed by Ropke et. al \cite{alns} in 2006.
 
-\gls{alns} supports multiple destroy operators and repair methods and adds a component of diversification strategy.
-
-% and insertion operators are selected based on their past performance during the search, usually by employing a roulette wheel selection process with an adaptive weight adjusting mechanism \cite{Azi2014, Gschwind2016, Masmoudi2020}. Ropke and Pisinger (2006) \cite{Ropke2006} used the adaptive large neighborhood search heuristic to solve the PDP with time windows. Their algorithm used removal and insertion operators already existing in the literature, including the removal operator by Shaw (1997) \cite{Shaw1997}, and an acceptance criterion for new solutions known from simulated annealing. The algorithm by Ropke and Pisinger has proven to be powerful and has served as a building block for many further studies in complicated routing problems, particularly PDP and DARP \cite{Gschwind2016, Braekers2016, Masmoudi2016, Belhaiza2017, Drexl2018, Belhaiza2019, Masmoudi2020, Wang2020, Cauchi2020, Malheiros2021}. Gschwind and Drexl (2016) \cite{Gschwind2016} adopted the algorithm from Ropke and Pisinger and added three more removal operators. They also demonstrated how to test a new solution for feasibility in an amortized constant time. Their version of the adaptive large neighborhood search produced better solutions on standard DARP instances compared to the vast majority of other algorithms, except for the hybrid genetic algorithm by Masmoudi et al. (2017) \cite{Masmoudi2017}.
-% \vspace{0.5cm}
+\gls{alns} supports multiple destroy operators and repair methods and adds a component of diversification strategy. Repair operators are selected based on their past performance during the search and usually by employing a roulette wheel selection process with an adaptive weight adjusting mechanism \cite{alns}.
 
 \section{Ant Colony Optimization}
 The other category of metaheuristics are population-based methods, which take their inspiration from natural concepts such as the evolution of species or the behavior of insects. However, all successful population-based heuristics rely on local search methods to drive the search towards promising areas and to avoid local optima. As a result, the majority of population-based algorithms are naturally hybrid \cite{vrp-bible}.

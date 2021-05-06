@@ -1,3 +1,13 @@
-\begin{conclusion}
-    The thesis objective was to explore if vehicle routing problem (\gls{VRP}) with time windows can be solved via machine learning.
+\begin{conclusion}\label{conslusion}
+The thesis objective was to explore solutions for the vehicle routing problem with soft constrained time windows (VRPTW) using optimization heuristics (metaheuristics) and primarily machine learning. Even though the general vehicle routing problem has seen novel proposed approaches in recent years, the problem of vehicle routing with soft constrained time windows has received almost no attention. Based on this realization, we have focused on proposing a solution for vehicle routing problem with soft constrained time windows using machine learning techniques and comparing it with metaheuristic solvers.
+
+In this thesis, we have formally defined the problem of vehicle routing and described its other flavours such as time windows. The thesis provides the necessary theoretical background of reinforcement learning, attention mechanism, Transformer network, and Graph Attention Network to fully understand the implemented solution of vehicle routing with soft constrained time windows. It covers various methods for solving our problem using constructive heuristics and metaheuristics. We also described how a production ready planner should look like.
+
+This thesis describes a new method for solving a vehicle routing problem with soft constrained time windows using deep reinforcement learning. The model is built upon Transformer architecture utilizing Graph Attention Network for embedding the input instance. The model uses a newly proposed reward function that incorporates the time window constraint. 
+
+We have developed and trained our proposed deep reinforcement learning using PyTorch and additionally implemented insertion heuristics as a constructive heuristic benchmark and OR-Tools solver as a metaheuristic benchmark. The model was successfully trained on a generated dataset of VRPTW instances because it requires a large amount of training unlabeled data.
+
+We have evaluated the performance of our model against our implemented constructive heuristic and metaheuristic. The model significantly outperforms the constructive heuristics but is still behind the OR-Tools metaheuristics. We have assumed that the model could be a great alternative to constructive heuristics, but because of its poor generalization, it is impossible to use it as a production ready planner.
+
+In the future work, we will focus on a little different approach and adopt a new model architecture of Kool et al. \cite{dpdp} which we plan to extend to support soft constrained time windows and pick and deliver.
 \end{conclusion}

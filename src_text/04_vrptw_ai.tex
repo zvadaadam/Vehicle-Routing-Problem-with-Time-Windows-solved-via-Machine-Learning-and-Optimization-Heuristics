@@ -1,5 +1,5 @@
-\chapter{VRPTW via AI}
-In this chapter, we will review the current end-to-end \gls{ai} methods for solving \gls{vrp} and propose our extension for solving \gls{vrptw}.
+\chapter{VRPTW via AI}\label{vrptw-ai}
+In this chapter, we will describe our end-to-end deep learning method for solving \gls{vrptw}.
 
 Machine learning and artificial intelligence have been replacing many hand-engineered algorithms and providing state-of-the-art results. In recent years, reinforcement learning \ref{rl} and advances in attention models \ref{attention} has shown great promise to disrupt the field of heuristics algorithms \cite{rl-constraint-opt, attention-route, dpdp}. Heuristics algorithms \cite{heuristics-algo} are incomplete methods that can compute solutions efficiently, but are not able to prove the optimality of a solution. Most of the business challenges do not require the most optimal exact solution \cite{excat-algo} but focus on approximation of the optimal solution in a reasonable time.
 
@@ -16,7 +16,7 @@ In 2019, Hottung et al. \cite{hottung} introduced a novel approach that was insp
 In 2021, another paper by Kool et al.\cite{dpdp} was released with a completely new approach. It combines  dynamic programming and deep learning to solve \gls{vrp} and promises much better performance than previous solutions. The method uses deep learning to restrict the dynamic programming search space using a policy derived from graph neural network. In the future, we will explore this method in depth and extend the support of constraints for time windows and pick and deliver problem \ref{pick-and-delivery}
 
 \section{Solution}
-The end-to-end \gls{ai} method pro solving \gls{vrptw} is extension of the work done by Kool et al. \cite{attention-route}. 
+The end-to-end deep learning method pro solving \gls{vrptw} is extension of the work done by Kool et al. \cite{attention-route}. 
 
 Let us describe the high-level concept behind the method. Consider we have a model as blackbox which takes \gls{vrptw} instance as an input and outputs probabilities for all the \gls{vrptw} nodes. The probability represents which node should be visited next and by following to the most probable node we get a partial solution which will be considered by the blackbox. We iterate this process until all nodes have been visited and we acquire a feasible plan as shown on Figure \ref{fig:attention-route-diagram}.
 
@@ -113,7 +113,7 @@ Let us describe the high-level concept behind the method. Consider we have a mod
     \begin{figure}[ht]
         \centering
         \includegraphics[width=1.0\textwidth]{resources/vrptw-ai/decoder-diagram.png}
-        \caption{TODO \cite{attention-route}}
+        \caption{Describes the decoder iteration in the construction of a solution. This diagram very nicely visualizes the process and it was used in the paper by Kool et al. \cite{attention-route}}
         \label{fig:encoder-diagram}
     \end{figure}
     
@@ -231,6 +231,6 @@ Let us describe the high-level concept behind the method. Consider we have a mod
     \subsection{Integrating Duration Matrix}
     Real-world application of \gls{vrp} require to obtain the distance and duration matrix which represents the weighted transition between graph nodes. The duration between two locations is typically defined by the infrastructure and speed limits on a given route. Such a duration matrix is calculated using map data such as OpenStreetMap \cite{osm}.
     
-    The neural network solving \gls{vrptw} learns to approximate the Euclidean distance between two given points. However, if we would integrate the duration matrix into the cost function of the model, the network would have to derive the duration between two points, which is an impossible task with the given model architecture. Moreover, the planning would be fixed to a location (city) on which the model was trained on.
+    The neural network solving \gls{vrptw} learns to approximate the Euclidean distance between two given points. However, if we would integrate the duration matrix into the cost function of the model, the network would have to derive the duration between two points, which is an impossible task with the given model architecture. Moreover, the planning would be fixed to the location (city) on which the model was trained on.
     
     We propose an indirect integration of the duration matrix for the input instance. We may project the duration matrix into the node locations using multidimensional scaling \cite{mds} which would embed the duration information in a given 2D space.

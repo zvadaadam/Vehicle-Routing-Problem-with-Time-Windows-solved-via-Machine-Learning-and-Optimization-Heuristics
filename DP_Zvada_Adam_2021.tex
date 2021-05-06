@@ -58,24 +58,28 @@
 \authorWithDegrees{Bc. Adam Zvada} %author's name with academic degrees
 \author{Adam Zvada} %author's name without academic degrees
 \supervisor{doc. Ing. Pavel Kordík, Ph.D.}
-\acknowledgements{TODO}
+\acknowledgements{
+This is giving me the remarkable opportunity to express many thanks to the Big Bang for all its kindness in creating our space-time just right.
+
+Great thanks also to my supervisor doc. Ing. Pavel Kordík, Ph.D. for all his help, time and advice.
+}
 \abstractCS{
-Pro řešení vehicle routing problému byli navržen nové přístupy v oblasti strojového učení, ale přesto nebyla věnována pozornost variantě směrování vozidel s časově omezenými časovými omezeními. I když je to nutnost pro každého logistického plánovače připraveného na produkci.
+Pro řešení vehicle routing problému byly navrženy nové přístupy v oblasti strojového učení, ale téměř žádná pozornost nebyla věnována variantě vehicle routing problému s časovými okny s mírným omezením (VRPTW). I přesto, že tato varianta je nutná řešit v každém produkčním řešení plánovacího logistického systému.
 
-Tato práce navrhuje novou metodu řešení problému směrování vozidla s časově omezenými časovými omezeními (VRPTW) pomocí hlubokého učení výztuže. Model je postaven na architektuře Transformer využívající Graph Attention Network pro vložení vstupní instance. Model používá nově navrženou funkci odměny, která zahrnuje omezení časového okna. Práce také zkoumá další metaheuristické metody pro řešení VRPTW, které slouží ke srovnávání výkonu modelu.
+Tato práce navrhuje novou metodu řešení VRPTW pomocí hlubokého posilovaného učení. Model je postaven na architektuře Transformer využívající Graph Attention Network pro vložení vstupní instance. Model používá nově navrženou funkci odměny, která zahrnuje omezení časových oken. Práce také zkoumá další metaheuristické metody pro řešení VRPTW, které slouží ke vyhodnocení výsledného modelu.
 
-Výsledkem této práce je end-to-end model hlubokého učení, který řeší VRPTW, ale stále ho předčí řešitelé metaheuristiky.
+Výsledkem této práce je end-to-end model hlubokého učení, který řeší VRPTW, který ale stále předčí metaheuristiké metody.
 }
 \abstractEN{
-A novel approaches in the field of machine learning has been proposed to solve the vehicle routing problem, but yet a variant of vehicle routing with soft constrained time windows has received no attention. Even though it is a must for any production ready logistics planner.
+A novel approaches in the field of machine learning has been proposed to solve the vehicle routing problem, but yet a variant of vehicle routing with soft constrained time windows has received almost no attention. Even though it is a must for any production ready logistics planner.
 
-This thesis proposes a new method for solving a vehicle routing problem with soft constrained time windows (VRPTW) using deep reinforcement learning. The model is built upon Transformer architecture utilizing Graph Attention Network for embedding the input instance. The model is using a newly proposed reward function that incorporates the time window constraint. The thesis also explores other metaheuristics methods for solving VRPTW which is used to benchmark the model performance. 
+This thesis proposes a new method for solving a vehicle routing problem with soft constrained time windows (VRPTW) using deep reinforcement learning. The model is built upon Transformer architecture utilizing Graph Attention Network for embedding the input instance. The model is using the proposed reward function that incorporates the time window constraint. The thesis also explores other metaheuristics methods for solving VRPTW, which is used to benchmark the model performance. 
 
 The result of this thesis is end-to-end deep learning model solving VRPTW but it is still outperformed by metaheuristics solvers.
 }
 \placeForDeclarationOfAuthenticity{Prague} %where you have signed the declaration
-\keywordsCS{TODO\newpage}
-\keywordsEN{TODO}
+\keywordsCS{vehicle routing problém, časová okna, vrptw, hluboké posilované učení, umělá inteligence, strojové učení, transformer, graph attention network\newpage}
+\keywordsEN{vehicle routing problem, time windows, vrptw, deep reinforcment learning, artificial intelligence, machine learning, transformer, graph attention network}
 \declarationOfAuthenticityOption{5} %select as appropriate, according to the desired license
 
 \newacronym{ai}{AI}{artificial intelligence}
@@ -92,59 +96,6 @@ The result of this thesis is end-to-end deep learning model solving VRPTW but it
 \newacronym{gcn}{GCN}{Graph Convolution Networks}
 \newacronym{lns}{LNS}{Large Neighborhood Search}
 \newacronym{alns}{ALNS}{Adaptive Large Neighborhood Search}
-
-\newacronym{ctu}{CTU}{Czech Technical University}
-\newacronym{cpu}{CPU}{central processing unit}
-\newacronym{cv}{CV}{computer vision}
-\newacronym{dex}{DEX}{Deep EXpectation}
-\newacronym{dl}{DL}{deep learning}
-\newacronym{dlt}{DLT}{Direct Linear Transform}
-\newacronym{dsae}{DSAE}{deep sparse autoencoders}
-\newacronym{fast r-cnn}{Fast R-CNN}{fast region-based convolutional network}
-\newacronym{faster r-cnn}{Faster R-CNN}{faster region-based convolutional network}
-\newacronym{fce}{FCE}{Faculty of Civil Engineering}
-\newacronym{fit}{FIT}{Faculty of Information Technology}
-\newacronym{fn}{FN}{false negatives}
-\newacronym{fp}{FP}{false positives}
-\newacronym{fps}{FPS}{frames per second}
-\newacronym{gige}{GigE}{Gigabit Ethernet}
-\newacronym{gpu}{GPU}{graphics processing unit}
-\newacronym{hog}{HOG}{histogram of oriented gradients}
-\newacronym{hsv}{HSV}{hue-saturation-value}
-\newacronym{idsw}{IDSW}{identity switches}
-\newacronym{improlab}{ImproLab}{Image Processing Laboratory}
-\newacronym{iou}{IoU}{intersection over union}
-\newacronym{lbp}{LBP}{local binary pattern}
-\newacronym{lstm}{LSTM}{long short-term memory}
-\newacronym{mae}{MAE}{mean absolute error}
-\newacronym{ml}{ML}{machine learning}
-\newacronym{mlp}{MLP}{multi layer perceptron}
-\newacronym{mot}{MOT}{multiple object tracking}
-\newacronym{mota}{MOTA}{multiple object tracking accuracy}
-\newacronym{motp}{MOTP}{multiple object tracking precision}
-\newacronym{mots}{MOTS}{multiple object tracking and segmentation}
-\newacronym{mp}{MP}{megapixel}
-\newacronym{mtmct}{MTMCT}{multi-target multi-camera tracking}
-\newacronym{nms}{NMS}{non-maximum suppression}
-\newacronym{nn}{NN}{neural network}
-\newacronym{pca}{PCA}{principal component analysis}
-\newacronym{r-cnn}{R-CNN}{region-based convolutional network}
-\newacronym{reid}{ReID}{re-identification}
-\newacronym{rgb}{RGB}{red-green-blue}
-\newacronym{roi}{RoI}{region of interest}
-\newacronym{rmse}{RMSE}{root-mean-square error}
-\newacronym{rnn}{RNN}{recurrent neural network}
-\newacronym{rpn}{RPN}{region proposal network}
-\newacronym{sdk}{SDK}{software development kit}
-\newacronym{sift}{SIFT}{Scale-invariant feature transform}
-\newacronym{sort}{SORT}{simple online and real-time tracking}
-\newacronym{ssd}{SSD}{single-shot detector}
-\newacronym{ssr}{SSR-Net}{Soft Stagewise Regression Network}
-\newacronym{surf}{SURF}{Speeded-Up Robust Features}
-\newacronym{spp}{SPP}{spatial pyramid pooling}
-\newacronym{svm}{SVM}{support vector machine}
-\newacronym{yolo}{YOLO}{you only look once}
-
 
 \begin{document}
     \input{src_text/00_introduction.tex}
@@ -169,17 +120,13 @@ The result of this thesis is end-to-end deep learning model solving VRPTW but it
     \chapter{Media contents}\label{app:CDcontent}
     \begin{figure}
     	\dirtree{%
-    		.1 readme.txt\DTcomment{the file with CD contents description}.
-    		.1 data\DTcomment{the data files directory}.
-    		.2 example\textunderscore sequence\DTcomment{the directory with example sequence from dataset}.
-    		.3 *.jpg\DTcomment{the example images}.
-    		.2 example\textunderscore sequence\textunderscore graphs\DTcomment{the directory of graphs of experiments}.
-    		.3 *.png\DTcomment{the motion output graphs}.
-    		.2 tracking\textunderscore example.mp4\DTcomment{the example video file}.
-    		.1 src\DTcomment{the directory of source codes}.
-    		.2 models\DTcomment{the directory of deep learning modules}.
-    		.2 utils\DTcomment{the directory of helper modules}.
-    		.2 *.py\DTcomment{the Python source files}.
+    	    .1 readme.txt\DTcomment{introductionary instructions}.
+    		.1 rl-am-vrptw\DTcomment{the directory of VRPTW using deep learning}.
+    		.2 README.md\DTcomment{the directory with example sequence from dataset}.
+    		.2 rl-am-vrptw\DTcomment{source code of network}.
+    		.1 godeliver-planner\DTcomment{directory of optimization planners}.
+    		.2 godeliver-planner\DTcomment{source code of planers}.
+    		.2 benchmarking\DTcomment{source code for running benchmarks}.
     		.1 text\DTcomment{the thesis text directory}.
     		.2 thesis\DTcomment{the directory of \LaTeX{} source codes of the thesis}.
     		.2 thesis.pdf\DTcomment{the Diploma thesis in PDF format}.
@@ -188,3 +135,4 @@ The result of this thesis is end-to-end deep learning model solving VRPTW but it
     
 
 \end{document}
+

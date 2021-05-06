@@ -1,4 +1,4 @@
-\chapter{Evaluation}
+\chapter{Evaluation}\label{evaluation}
 
 In this chapter, we will evaluate our proposed planning model based on deep reinforcement learning built upon Transformer \ref{transformer} architecture utilizing Graph Attention Network \ref{graph-attention-network} and benchmark the performance against constructive heuristics and metaheuristics.
 
@@ -137,7 +137,11 @@ The cost function is used as a reward function for \gls{rl}. It is important to 
 \section{Benchmarking}\label{benchmarking}
 We know that our deep reinforcement learning model for sub-optimally solving \gls{vrptw} can predict a solution for \gls{vrptw} instances \ref{fig:sample-50}. However, to evaluate the model performance, we need to compare it with other reliable methods like constructive heuristics and metaheuristics.
 
-The first benchmark is insertion heuristics \ref{insertion-heuristics} which produces a feasible solution in a matter of seconds. It is frequently used to generate an initial solution which is then optimized by a local search algorithm or population-based method. The second typical benchmark used in research papers is OR-Tools framework \ref{or-tools} and its is widely used for many optimization tasks. Lastly, the third benchmark combines insertion heuristics as an initial solution and OR-Tools planner as a metaheuristics.
+The first benchmark is insertion heuristics \ref{insertion-heuristics} which produces a feasible solution in a matter of seconds. It is frequently used to generate an initial solution which is then optimized by a local search algorithm or population-based method. The second typical benchmark used in research papers is OR-Tools framework \ref{or-tools} and its is widely used for many optimization tasks. Lastly, the third benchmark combines insertion heuristics as an initial solution and OR-Tools planner as a metaheuristic.
+
+In tables \ref{tab:result-20}, \ref{tab:result-50} and \ref{tab:result-100} are measured the average cost of our implemented planners on 64 random \gls{vrptw} instances. We evaluate on all the essential subparts of the cost function where the \textit{AggCost} is the same as being used in our model architecture \ref{vrptw-cost}. Additionally, we have tracked the computation time per each instance to emphasize on the great advantage of our model.
+
+Our proposed deep reinforcement learning model is $\text{RL\_AM\_PLANNER}$. Additionally, we have implemented RL\_AM\_OR\_TOOLS\_PLANNER, a planner that uses the predicted solution of our model as a constructive heuristic which is then optimized by OR-Tools.
 
 \begin{table}[ht]
 \centering
@@ -161,8 +165,7 @@ The first benchmark is insertion heuristics \ref{insertion-heuristics} which pro
 \label{tab:result-20}
 \end{table} 
 
-In table \ref{tab:result-20} we may see the average cost of our implemented planners on 64 different \gls{vrptw} instances. 
-The \textit{AggCost} is the same as being used in our model architecture \ref{vrptw-cost}.
+
 
 
 \begin{table}[ht]
@@ -186,6 +189,7 @@ The \textit{AggCost} is the same as being used in our model architecture \ref{vr
 
 }
 \caption{Benchmarking of VRPTW solvers for problem size of 50 nodes.}
+\label{tab:result-50}
 \end{table} 
 
 
@@ -199,14 +203,15 @@ The \textit{AggCost} is the same as being used in our model architecture \ref{vr
 {} &          Km &       min. &           min. &             sec &       \\
 \midrule
 \textbf{INSERTION\_HEURISTIC}    &         4,654 &          0 &         17,548 &              750 &    \textbf{9,041} \\
-\textbf{RL\_AM\_PLANNER}          &         5,852 &          1 &         15,805 &               16 &    \textbf{9,804} \\
+\textbf{RL\_AM\_PLANNER}          &         ${5,852}^*$ &          ${1}^*$ &         ${15,805}^*$ &               16 &    \textbf{${9,804}^*$} \\
 \textbf{OR\_TOOLS}               &         1,034 &      2,885 &         23,719 &              199 &    \textbf{8,406} \\
 \textbf{OR\_TOOLS\_INSERTION}     &         4,478 &          0 &         17,109 &              807 &    \textbf{8,755} \\
-\textbf{RL\_AM\_OR\_TOOLS\_PLANNER} &         1,034 &      2,885 &         23,719 &              219 &    \textbf{8,406} \\
+\textbf{RL\_AM\_OR\_TOOLS\_PLANNER} &         ${1,034}^*$ &      ${2,885}^*$ &         ${23,719}^*$ &              ${219}^*$ &    \textbf{${8,406}^*$} \\
 \bottomrule
 \end{tabular}
 }
 \caption{Benchmarking of VRPTW solvers for problem size of 100 nodes.}
+\label{tab:result-100}
 \end{table} 
 
-
+Our proposed model RL\_AM\_PLANNER is outperforming the constructive heuristic as expected, but OR-Tools as our metaheristics, clearly outperforms the deep learning model. The RL\_AM\_PLANNER model for the problem size of 100 was not fully trained and the data may be biased (marked with $x^*$). However, it is important to appreciate the negligible computational time which the deep learning model requires to predict a feasible but still highly suboptimal solution in compression with metaheuristics solvers.
